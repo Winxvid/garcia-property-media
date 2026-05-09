@@ -110,6 +110,7 @@
       right: 0;
       width: clamp(80px, 20vw, 200px);
       height: calc(100vh - clamp(60px, 10vw, 200px));
+      height: calc(100svh - clamp(60px, 10vw, 200px));
       z-index: 80;
       clip-path: inset(0 0 100% 0);
       transition: clip-path 2.8s cubic-bezier(0.23, 1, 0.32, 1);
@@ -406,9 +407,9 @@
 <body class="min-h-screen flex flex-col">
 
   <!-- ===== HEADER ===== -->
-  <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h-20 md:h-40"
+  <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h-28 md:h-40"
           style="background-color:rgba(0,0,0,0.9);">
-    <div class="max-w-[1920px] mx-auto h-full px-10 grid grid-cols-3 items-center">
+    <div class="max-w-[1920px] mx-auto h-full px-4 md:px-10 grid grid-cols-3 items-center">
 
       <!-- Logo (center) -->
       <div class="col-start-2 flex justify-center items-center h-full py-0 md:py-0">
@@ -464,7 +465,7 @@
     </nav>
   </div>
 
-  <main class="flex-grow pt-20 md:pt-40">
+  <main class="flex-grow pt-28 md:pt-40">
 
     <!-- ===== HERO ===== -->
     <section id="hero-scroll" class="relative w-full" style="height:300vh;">
