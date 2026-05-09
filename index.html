@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Garcia Property Media</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: '#131313',
+            'on-surface': '#e2e2e2',
+            'on-surface-variant': '#e2e2e2',
+            secondary: '#ffb784',
+            primary: '#ffffff',
+            accent: '#e57600',
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['Epilogue', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #131313;
+      color: #e2e2e2;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Custom components */
+    .luxury-card {
+      background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+      border: 1px solid #4a3721;
+      box-shadow: inset 0 0 20px rgba(255,215,0,0.05), 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 25%, #c5a028 50%, #d4af37 75%, #f3e5ab 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-border-effect { position: relative; }
+    .gold-border-effect::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, #d4af37, #4a3721) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    .clip-path-playhead {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Animations */
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(1.1); }
+      to   { opacity: 0.6; transform: scale(1); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .anim-scale-in  { animation: scaleIn    1.5s ease forwards; }
+    .anim-fade-down { animation: fadeInDown 0.6s ease forwards; }
+    .anim-fade-left { animation: fadeInLeft 0.8s ease 0.5s forwards; opacity: 0; }
+
+    /* Scroll-reveal: hidden until observed */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================================
+       FILM CANISTER MENU
+       One image (hamburger_menu_full.png) fills a fixed 100vh panel
+       on the right edge.
+         - Closed: clip-path reveals only the top ~18% = canister cap
+         - Open:   clip-path reveals 100% = canister cap + full strip
+       The transparent #menu-btn sits over the canister area and is
+       always clickable (pointer-events: auto) even when panel is clipped.
+    ============================================================ */
+    #film-wrapper {
+      position: fixed;
+      top: clamp(85px, -8vw, 200px);
+      right: 0;
+      width: clamp(100px, 14vw, 200px);
+      height: calc(100vh - clamp(100px, 9vw, 140px));
+      z-index: 80;
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 2.8s cubic-bezier(0.23, 1, 0.32, 1);
+      pointer-events: none;
+      overflow: hidden;
+      /* Classic film strip brown */
+      background: #6c3e1d;
+    }
+    #film-wrapper.open {
+      clip-path: inset(0 0 0% 0);
+    }
+    /* Single image filling the strip panel */
+    #film-full-img {
+      display: none;
+    }
+    /* Left sprocket holes */
+    #film-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 18px;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        #1a1a1a 0px,
+        #1a1a1a 14px,
+        transparent 14px,
+        transparent 28px
+      );
+      border-right: 8px solid #1a1a1a;
+      z-index: 2;
+      pointer-events: none;
+    }
+    /* Right sprocket holes */
+    .sprocket-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 18px;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        #1a1a1a 0px,
+        #1a1a1a 14px,
+        transparent 14px,
+        transparent 28px
+      );
+      border-left: 8px solid #1a1a1a;
+      z-index: 2;
+      pointer-events: none;
+    }
+    /* Inner content area between sprockets */
+    .film-content {
+      position: absolute;
+      inset: 0;
+      left: 21px;
+      right: 21px;
+      display: flex;
+      flex-direction: column;
+      background: #7a3f18;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+    /* Canister icon button — always visible, above everything */
+    #menu-btn {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: clamp(140px, 14vw, 150px);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      z-index: 70;
+      filter: drop-shadow(-4px 4px 18px rgba(0,0,0,0.85));
+      transition: transform 0.2s ease;
+    }
+    #menu-btn:hover { transform: scale(1.05); }
+    #menu-btn:active { transform: scale(0.97); }
+    #menu-btn img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    #menu-btn-inner {
+      position: relative;
+      display: block;
+    }
+    .menu-icon {
+      position: absolute;
+      /* center on the yellow cylinder body */
+      top: 26%;
+      left: 56%;
+      transform: translate(-50%, -50%);
+      width: 24%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 13%;
+      transition: opacity 0.2s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+    .menu-icon svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+    }
+    #icon-hamburger { opacity: 1; }
+    #icon-close     { opacity: 0; transform: translate(-50%, -50%) rotate(-90deg) scale(0.7); }
+    body.menu-open #icon-hamburger { opacity: 0; transform: translate(-50%, -50%) rotate(90deg) scale(0.7); }
+    body.menu-open #icon-close     { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+    /* Transparent button area is removed — #menu-btn is now outside the wrapper */
+    /* Nav links — 5 equal stacked cells */
+    #film-nav {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      pointer-events: none;
+      z-index: 5;
+    }
+    #film-wrapper.open #film-nav {
+      pointer-events: auto;
+    }
+    #film-nav a {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateX(14px);
+      font-family: 'Epilogue', sans-serif;
+      font-size: clamp(0.75rem, 1.15vw, 1rem);
+      font-weight: 900;
+      color: #f4e4c0;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      transition: color 0.25s ease, text-shadow 0.25s ease, background 0.25s ease;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      white-space: nowrap;
+      pointer-events: auto;
+      border-bottom: 1px solid rgba(0,0,0,0.3);
+    }
+    #film-nav a:last-child { border-bottom: none; }
+
+    /* HOME cell — photo bg with animated film overlay + sprocket holes */
+    #film-nav a:nth-child(1) {
+      background: url('Hamburger_home.jpg') center / cover no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+    #film-nav a:nth-child(1):hover {
+      background: url('Hamburger_home.jpg') center / cover no-repeat;
+    }
+    /* ABOUT cell */
+    #film-nav a:nth-child(2) {
+      background: url('Hamburger_about.webp') center / cover no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+    #film-nav a:nth-child(2):hover {
+      background: url('Hamburger_about.webp') center / cover no-repeat;
+    }
+    /* SERVICES cell */
+    #film-nav a:nth-child(3) {
+      background: url('Hamburger_services.webp') center / cover no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+    #film-nav a:nth-child(3):hover {
+      background: url('Hamburger_services.webp') center / cover no-repeat;
+    }
+    /* PORTFOLIO cell */
+    #film-nav a:nth-child(4) {
+      background: url('Hamburger_portfolio.avif') center / cover no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+    #film-nav a:nth-child(4):hover {
+      background: url('Hamburger_portfolio.avif') center / cover no-repeat;
+    }
+    /* QUOTE cell */
+    #film-nav a:nth-child(5) {
+      background: url('Hamburger_quote.jpg') center / cover no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+    #film-nav a:nth-child(5):hover {
+      background: url('Hamburger_quote.jpg') center / cover no-repeat;
+    }
+    /* Brown film-negative overlay — fades on hover to reveal photo */
+    #film-nav a:nth-child(1)::before,
+    #film-nav a:nth-child(2)::before,
+    #film-nav a:nth-child(3)::before,
+    #film-nav a:nth-child(4)::before,
+    #film-nav a:nth-child(5)::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(120,55,10,0.84) 0%, rgba(55,22,4,0.90) 100%);
+      transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1;
+      pointer-events: none;
+    }
+    #film-nav a:nth-child(1):hover::before,
+    #film-nav a:nth-child(2):hover::before,
+    #film-nav a:nth-child(3):hover::before,
+    #film-nav a:nth-child(4):hover::before,
+    #film-nav a:nth-child(5):hover::before {
+      opacity: 0.18;
+    }
+    /* Sprocket holes left + right */
+    #film-nav a:nth-child(1)::after,
+    #film-nav a:nth-child(2)::after,
+    #film-nav a:nth-child(3)::after,
+    #film-nav a:nth-child(4)::after,
+    #film-nav a:nth-child(5)::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(to bottom, #111 0px, #111 13px, transparent 13px, transparent 27px),
+        repeating-linear-gradient(to bottom, #111 0px, #111 13px, transparent 13px, transparent 27px);
+      background-size: 16px 100%, 16px 100%;
+      background-position: left center, right center;
+      background-repeat: repeat-y, repeat-y;
+      pointer-events: none;
+      z-index: 2;
+    }
+    /* Keep nav text above overlays */
+    .nav-label {
+      position: relative;
+      z-index: 3;
+    }
+
+    #film-nav a:hover {
+      color: #fff8e7;
+      text-shadow: 0 0 16px rgba(255,220,150,0.8);
+      background: rgba(0,0,0,0.25);
+    }
+    #film-wrapper.open #film-nav a {
+      animation: filmLinkIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    #film-wrapper.open #film-nav a:nth-child(1) { animation-delay: 0.48s; }
+    #film-wrapper.open #film-nav a:nth-child(2) { animation-delay: 0.60s; }
+    #film-wrapper.open #film-nav a:nth-child(3) { animation-delay: 0.72s; }
+    #film-wrapper.open #film-nav a:nth-child(4) { animation-delay: 0.84s; }
+    #film-wrapper.open #film-nav a:nth-child(5) { animation-delay: 0.96s; }
+    @keyframes filmLinkIn {
+      from { opacity: 0; transform: translateX(14px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    /* Backdrop */
+    #backdrop {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    #backdrop.open {
+      pointer-events: auto;
+      opacity: 1;
+    }
+    /* Lock scroll when open */
+    body.menu-open { overflow: hidden; }
+
+    /* Hero scroll-reveal lines */
+    .hero-line {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .hero-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Feature card hover */
+    .feature-card { transition: transform 0.5s ease; }
+    .feature-card:hover { transform: translateY(-8px); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ===== HEADER ===== -->
+  <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h md:h-40"
+          style="background-color:rgba(0,0,0,0.9);">
+    <div class="max-w-[1920px] mx-auto h-full px-8 grid grid-cols-3 items-center">
+
+      <!-- Logo (center) -->
+      <div class="col-start-2 flex justify-center items-center h-full py-0 md:py-0">
+        <img
+          src="Garcia_Media_logo.PNG"
+          alt="Garcia Property Media"
+          class="h-full w-auto object-contain cursor-pointer anim-fade-down"
+          onclick="window.scrollTo({top:0,behavior:'smooth'})"
+        />
+      </div>
+
+      <!-- right column spacer -->
+      <div></div>
+    </div>
+  </header>
+
+  <!-- Backdrop -->
+  <div id="backdrop" class="fixed inset-0 z-40" onclick="closeMenu()"></div>
+
+  <!-- Canister icon button — always visible at top-right -->
+  <button id="menu-btn" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false">
+    <span id="menu-btn-inner">
+      <img src="Hamburger_film1.PNG" alt="Menu" />
+      <!-- Hamburger icon -->
+      <span id="icon-hamburger" class="menu-icon">
+        <svg viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect y="0"  width="40" height="5" rx="2.5" fill="#1a0e00"/>
+          <rect y="11" width="40" height="5" rx="2.5" fill="#1a0e00"/>
+          <rect y="23" width="40" height="5" rx="2.5" fill="#1a0e00"/>
+        </svg>
+      </span>
+      <!-- X / close icon -->
+      <span id="icon-close" class="menu-icon">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="2" y1="2" x2="34" y2="34" stroke="#1a0e00" stroke-width="5" stroke-linecap="round"/>
+          <line x1="34" y1="2" x2="2"  y2="34" stroke="#1a0e00" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </span>
+  </button>
+
+  <!-- Film strip panel — unrolls downward from below the canister -->
+  <div id="film-wrapper">
+    <div class="sprocket-right"></div>
+    <div class="film-content"></div>
+    <img id="film-full-img" src="House_neg_filmroll.png" alt="" aria-hidden="true" />
+    <nav id="film-nav" aria-label="Site navigation">
+      <a href="#" onclick="closeMenu()"><span class="nav-label">Home</span></a>
+      <a href="#" onclick="closeMenu()"><span class="nav-label">About</span></a>
+      <a href="#" onclick="closeMenu()"><span class="nav-label">Services</span></a>
+      <a href="#" onclick="closeMenu()"><span class="nav-label">Portfolio</span></a>
+      <a href="#" onclick="closeMenu()"><span class="nav-label">Quote</span></a>
+    </nav>
+  </div>
+
+  <main class="flex-grow pt-20 md:pt-32">
+
+    <!-- ===== HERO ===== -->
+    <section id="hero-scroll" class="relative w-full" style="height:300vh;">
+      <!-- Sticky viewport that stays in view while parent scrolls -->
+      <div class="sticky top-0 w-full overflow-hidden" style="height:100vh;">
+        <video
+          id="hero-video"
+          src="Hero_video.MP4"
+          muted
+          playsinline
+          preload="auto"
+          class="absolute inset-0 w-full h-full object-cover"
+        ></video>
+        <div class="absolute inset-0"
+             style="background:linear-gradient(to top, #131313, transparent, rgba(0,0,0,0.4));"></div>
+
+        <div class="relative z-10 w-full h-full mx-auto px-6 md:px-16 grid grid-cols-12 items-end pb-32"
+             style="max-width:1440px;">
+          <div class="col-span-12 md:col-span-10">
+            <h2 id="hero-line-0" class="text-sm font-bold uppercase mb-6 hero-line"
+                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.3em; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
+              Real Estate Videographer
+            </h2>
+            <h1 class="text-5xl md:text-8xl font-extrabold text-white uppercase"
+                style="font-family:'Epilogue',sans-serif; letter-spacing:-0.05em; line-height:0.9; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;">
+              <span id="hero-line-1" class="hero-line block">Elevating</span>
+              <span id="hero-line-2" class="hero-line block">Architectural</span>
+              <span id="hero-line-3" class="hero-line block">Storytelling</span>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TIMELINE (Recent Properties) ===== -->
+    <section class="w-full overflow-hidden" style="padding:128px 0; background-color:#131313;">
+      <div class="mx-auto px-6 md:px-16 mb-16" style="max-width:1440px;">
+        <div class="grid grid-cols-12 gap-6 items-end">
+          <div class="col-span-12 md:col-span-6 reveal">
+            <h2 class="text-4xl md:text-5xl font-bold text-white uppercase tracking-tight"
+                style="font-family:'Epilogue',sans-serif;">
+              Recent Properties
+            </h2>
+          </div>
+          <div class="col-span-12 md:col-span-6 flex justify-end reveal">
+            <p class="text-sm md:text-base leading-relaxed opacity-70"
+               style="color:#e2e2e2; max-width:28rem;">
+              Cinematic visual storytelling designed to elevate premium properties and distinct architectural spaces.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video-editor UI -->
+      <div class="w-full border-y reveal"
+           style="background-color:#1b1b1b; border-color:rgba(255,255,255,0.1); font-family:'Inter',sans-serif; box-shadow:0 25px 50px rgba(0,0,0,0.5);">
+
+        <!-- Top bar -->
+        <div class="flex items-center justify-between px-8 py-4 border-b"
+             style="background-color:#2a2a2a; border-color:rgba(255,255,255,0.1); color:#e2e2e2;">
+          <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3 text-xs uppercase tracking-wider font-medium">
+              <span class="opacity-60">Playback:</span>
+              <button class="flex items-center gap-1 px-3 py-1.5 rounded border text-xs"
+                      style="background-color:#1f1f1f; border-color:rgba(255,255,255,0.05);">
+                1x
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+            <div class="h-6 w-px" style="background-color:rgba(255,255,255,0.1);"></div>
+            <div class="flex items-center gap-3 text-xs tracking-wider opacity-60">
+              <span>Start</span>
+              <span class="px-3 py-1 rounded border" style="background-color:#1f1f1f; border-color:rgba(255,255,255,0.05);">1</span>
+              <span class="ml-2">End</span>
+              <span class="px-3 py-1 rounded border" style="background-color:#1f1f1f; border-color:rgba(255,255,255,0.05);">30</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <button class="p-2 rounded transition-colors hover:bg-white/10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+            </button>
+            <div class="flex items-center rounded border overflow-hidden"
+                 style="background-color:#1f1f1f; border-color:rgba(255,255,255,0.05);">
+              <button class="p-2 transition-colors hover:bg-white/10 border-r"
+                      style="border-color:rgba(255,255,255,0.1);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+              </button>
+              <button class="px-4 py-2 transition-colors border-r"
+                      style="background-color:white; color:black; border-color:rgba(255,255,255,0.1);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </button>
+              <button class="p-2 transition-colors hover:bg-white/10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="w-24"></div>
+        </div>
+
+        <!-- Timeline area -->
+        <div class="flex" style="height:400px;">
+
+          <!-- Track controls -->
+          <div class="flex-shrink-0 border-r"
+               style="width:256px; background-color:#1b1b1b; border-color:rgba(255,255,255,0.1);">
+            <div class="h-12 border-b flex items-center px-6"
+                 style="border-color:rgba(255,255,255,0.1);">
+              <button class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Add Track
+              </button>
+            </div>
+            <!-- Track rows -->
+            <div class="border-b flex items-center px-6 opacity-60 hover:opacity-100 transition-opacity"
+                 style="height:112px; border-color:rgba(255,255,255,0.1);">
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] font-bold uppercase opacity-40" style="letter-spacing:0.2em;">Track 01</span>
+                <div class="flex gap-4 text-on-surface-variant">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="border-b flex items-center px-6 opacity-60 hover:opacity-100 transition-opacity"
+                 style="height:112px; border-color:rgba(255,255,255,0.1);">
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] font-bold uppercase opacity-40" style="letter-spacing:0.2em;">Track 02</span>
+                <div class="flex gap-4 text-on-surface-variant">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center px-6 opacity-60 hover:opacity-100 transition-opacity"
+                 style="height:112px;">
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] font-bold uppercase opacity-40" style="letter-spacing:0.2em;">Track 03</span>
+                <div class="flex gap-4 text-on-surface-variant">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scrollable track area -->
+          <div class="flex-grow overflow-x-auto relative scrollbar-hide cursor-crosshair"
+               style="background-color:#0e0e0e;">
+            <!-- Time ruler -->
+            <div class="h-12 border-b flex items-end px-4 gap-24 text-[9px] font-mono opacity-30 pb-2"
+                 style="border-color:rgba(255,255,255,0.1);">
+              <span>00:00:00</span><span>00:00:02</span><span>00:00:04</span><span>00:00:06</span>
+              <span>00:00:08</span><span>00:00:10</span><span>00:00:12</span><span>00:00:14</span>
+            </div>
+
+            <!-- Playhead -->
+            <div class="absolute top-0 bottom-0 w-px z-20 pointer-events-none"
+                 style="left:400px; background-color:white; box-shadow:0 0 8px rgba(255,255,255,0.5);">
+              <div class="absolute w-[15px] h-5 bg-white clip-path-playhead"
+                   style="top:-4px; left:-7px;"></div>
+            </div>
+
+            <!-- Clips -->
+            <div class="relative py-4 flex flex-col" style="gap:8px;">
+
+              <!-- Track 1: The Glass Pavilion -->
+              <div class="flex items-center relative" style="height:112px;">
+                <div class="absolute rounded border overflow-hidden bg-black group cursor-pointer transition-all hover:border-white/40"
+                     style="left:40px; width:288px; height:80px; border-color:rgba(255,255,255,0.2);">
+                  <img
+                    class="w-full h-full object-cover grayscale opacity-60 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBd0vBtZ0QX9Jhccj1e6sjOOHWTjuXcEbeIlYLEd53Vgvy5UCVVX7YXU9aKn8LTLlHD3ONxNJcsUTlU1qOFvjKnFwvXSrIf6QScGkviyZ7gnjfA1AMDSyX14m0tKyd8p6fmNsCTzQWMBwuhvtFg311eT-12rVZTnvfMrveL-w6iG0_SkbSHq8NW-8tbnvdoGE9ZGEEtmBNpwKt_t3t-PzS2jN3fbfSm43_wf39BtUDo-JDYmcEv8M1A-mQDcxamNf-lJ2bUU48Sk2GU"
+                    alt="The Glass Pavilion"
+                  />
+                  <div class="absolute bottom-0 left-0 right-0 px-3 py-1.5 border-t"
+                       style="background-color:rgba(0,0,0,0.9); border-color:rgba(255,255,255,0.05);">
+                    <p class="text-[9px] uppercase font-bold"
+                       style="letter-spacing:0.15em; color:rgba(255,255,255,0.9);">The Glass Pavilion</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Track 2: Skyline Penthouse (active) -->
+              <div class="flex items-center relative" style="height:112px;">
+                <div class="absolute rounded cursor-pointer"
+                     style="left:300px; width:500px; height:80px; border:2px solid rgba(229,118,0,0.8); background-color:rgba(229,118,0,0.2); box-shadow:0 0 20px rgba(229,118,0,0.2);">
+                  <div class="flex h-full">
+                    <img
+                      class="w-1/4 h-full object-cover opacity-80"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHER1P_4hK-BGwX2dxYtBL3TsO_qftVdGPX1opbejb60-EASrQ-mcVOguNcc6ah8qYITiiDa8rA4rN2Yj-527tOY3L10Jy4KCaDxYtihwxSXgOjf49JrN2pT9prphr6GFC2QOmFYNXJBjLql_z-fkFUoB4ZJQedo9uTNlHeZXzXB7P1bIfXEjMjjUGMgDc6V0hapjdUkJL9bnMV3AU7peb63_ya_TWhgKY3rQY_cmrCtKB4Oq1Bwc2zsI1ylhXJxPCaKtQ3tzAy_CO"
+                      alt="Skyline Penthouse"
+                    />
+                    <div class="w-1/4 h-full border-r" style="background-color:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1);"></div>
+                    <div class="w-1/4 h-full border-r" style="background-color:rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.1);"></div>
+                    <div class="w-1/4 h-full" style="background-color:rgba(255,255,255,0.05);"></div>
+                  </div>
+                  <div class="absolute bottom-0 left-0 right-0 px-3 py-1.5"
+                       style="background-color:#e57600;">
+                    <p class="text-[9px] uppercase font-black text-white"
+                       style="letter-spacing:0.2em;">Skyline Penthouse — EDITING</p>
+                  </div>
+                  <!-- Trim handles -->
+                  <div class="absolute rounded-sm border"
+                       style="top:50%; left:-6px; transform:translateY(-50%); width:12px; height:40px; background-color:rgba(255,255,255,0.8); border-color:rgba(0,0,0,0.2);"></div>
+                  <div class="absolute rounded-sm border"
+                       style="top:50%; right:-6px; transform:translateY(-50%); width:12px; height:40px; background-color:rgba(255,255,255,0.8); border-color:rgba(0,0,0,0.2);"></div>
+                </div>
+              </div>
+
+              <!-- Track 3: Ocean View Villa -->
+              <div class="flex items-center relative" style="height:112px;">
+                <div class="absolute rounded border overflow-hidden bg-black group cursor-pointer transition-all hover:border-white/40"
+                     style="left:850px; width:320px; height:80px; border-color:rgba(255,255,255,0.2);">
+                  <img
+                    class="w-full h-full object-cover opacity-40 transition-opacity duration-700 group-hover:opacity-100"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHER1P_4hK-BGwX2dxYtBL3TsO_qftVdGPX1opbejb60-EASrQ-mcVOguNcc6ah8qYITiiDa8rA4rN2Yj-527tOY3L10Jy4KCaDxYtihwxSXgOjf49JrN2pT9prphr6GFC2QOmFYNXJBjLql_z-fkFUoB4ZJQedo9uTNlHeZXzXB7P1bIfXEjMjjUGMgDc6V0hapjdUkJL9bnMV3AU7peb63_ya_TWhgKY3rQY_cmrCtKB4Oq1Bwc2zsI1ylhXJxPCaKtQ3tzAy_CO"
+                    alt="Ocean View Villa"
+                  />
+                  <div class="absolute bottom-0 left-0 right-0 px-3 py-1.5 border-t"
+                       style="background-color:rgba(0,0,0,0.9); border-color:rgba(255,255,255,0.05);">
+                    <p class="text-[9px] uppercase font-bold"
+                       style="letter-spacing:0.15em; color:rgba(255,255,255,0.9);">Ocean View Villa</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES (Why Hire Us?) ===== -->
+    <section class="relative overflow-hidden" style="padding:128px 0; background-color:#131313;">
+      <div class="absolute inset-0 opacity-10 pointer-events-none">
+        <div class="absolute inset-0"
+             style="background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2) 0%, transparent 100%);"></div>
+        <div class="w-full h-full opacity-20"
+             style="background-image:url('https://www.transparenttextures.com/patterns/dark-matter.png');"></div>
+      </div>
+
+      <div class="mx-auto px-6 md:px-16 relative z-10" style="max-width:1440px;">
+        <h2 class="gold-gradient-text italic text-5xl md:text-7xl font-bold uppercase mb-24 md:mb-32 tracking-tight text-center md:text-left reveal"
+            style="font-family:'Epilogue',sans-serif;">
+          Why Hire Us?
+        </h2>
+
+        <div class="flex flex-col mx-auto" style="gap:48px; max-width:64rem;">
+
+          <div class="luxury-card gold-border-effect feature-card reveal p-8 md:p-14">
+            <h3 class="text-2xl md:text-3xl font-bold mb-8"
+                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.15em;">
+              MOBILE CINEMATIC CAPTURE
+            </h3>
+            <p class="leading-relaxed text-sm md:text-lg opacity-80" style="color:#e2e2e2; max-width:48rem;">
+              We don't drag around $20k camera rigs. We shoot with the latest flagship smartphones — delivering battery-smooth 4K, incredible low-light performance, and natural, intimate perspectives that feel alive. No bulky equipment means faster shoots, zero disruption to your sellers, and the freedom to capture creative angles in tight spaces that traditional crews simply can't reach.
+            </p>
+          </div>
+
+          <div class="luxury-card gold-border-effect feature-card reveal p-8 md:p-14">
+            <h3 class="text-2xl md:text-3xl font-bold mb-8"
+                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.15em;">
+              AI-POWERED TRANSFORMATION
+            </h3>
+            <p class="leading-relaxed text-sm md:text-lg opacity-80" style="color:#e2e2e2; max-width:48rem;">
+              Raw footage is just the starting point. We upload every clip to cutting-edge AI video platforms that intelligently stabilize, enhance lighting, generate cinematic motion, create smooth dolly zooms, and elevate colors to Hollywood standards. The result? Videos that look like they were shot on a professional cinema camera — but delivered in a fraction of the time and cost.
+            </p>
+          </div>
+
+          <div class="luxury-card gold-border-effect feature-card reveal p-8 md:p-14">
+            <h3 class="text-2xl md:text-3xl font-bold mb-8"
+                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.15em;">
+              CAPCUT MASTERY &amp; EDITORIAL POLISH
+            </h3>
+            <p class="leading-relaxed text-sm md:text-lg opacity-80" style="color:#e2e2e2; max-width:48rem;">
+              This is where good becomes unforgettable. Using professional CapCut workflows and advanced editing tools, we craft custom sound design, elegant transitions, dynamic text overlays, trending effects, and perfectly paced storytelling. Every video is color-graded, music-synced, and optimized for maximum emotional impact — the kind of polish that makes viewers stop scrolling and say, "I have to see this house."
+            </p>
+          </div>
+
+          <div class="luxury-card gold-border-effect feature-card reveal p-8 md:p-14">
+            <h3 class="text-2xl md:text-3xl font-bold mb-8"
+                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.15em;">
+              REAL ESTATE SALES ACCELERATOR
+            </h3>
+            <p class="leading-relaxed text-sm md:text-lg opacity-80" style="color:#e2e2e2; max-width:48rem;">
+              We don't just film properties — we sell dreams. Our videos are engineered to highlight lifestyle, light, flow, and potential in ways that create instant emotional connection. Agents who work with us consistently report higher engagement, more showings, longer watch times, and properties that sell faster and for stronger offers.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="w-full py-24 px-8 border-t" style="background-color:black; border-color:rgba(255,255,255,0.1);">
+    <div class="mx-auto grid grid-cols-1 md:grid-cols-12 gap-12" style="max-width:1920px;">
+      <div class="md:col-span-4 flex flex-col gap-6">
+        <div class="text-xl font-bold text-white uppercase" style="letter-spacing:0.1em;">
+          Premium Studio Cinema
+        </div>
+        <p class="uppercase" style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">
+          &copy; 2026 Garcia Property Studio.<br />All Rights Reserved.
+        </p>
+      </div>
+      <div class="md:col-span-8 flex flex-wrap items-end md:justify-end" style="gap:24px 48px;">
+        <a href="#" class="uppercase transition-all duration-500 hover:text-accent"
+           style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Instagram</a>
+        <a href="#" class="uppercase transition-all duration-500 hover:text-accent"
+           style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Vimeo</a>
+        <a href="#" class="uppercase transition-all duration-500 hover:text-accent"
+           style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">LinkedIn</a>
+        <a href="#" class="uppercase transition-all duration-500 hover:text-accent"
+           style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Newsletter</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Film canister menu
+    function toggleMenu() {
+      const wrapper  = document.getElementById('film-wrapper');
+      const backdrop = document.getElementById('backdrop');
+      const btn      = document.getElementById('menu-btn');
+      const isOpen   = wrapper.classList.toggle('open');
+      backdrop.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+    function closeMenu() {
+      document.getElementById('film-wrapper').classList.remove('open');
+      document.getElementById('backdrop').classList.remove('open');
+      document.body.classList.remove('menu-open');
+      document.getElementById('menu-btn').setAttribute('aria-expanded', 'false');
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    // Scroll-reveal via IntersectionObserver
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Scroll-scrubbed hero video + text reveals
+    const heroVideo   = document.getElementById('hero-video');
+    const heroSection = document.getElementById('hero-scroll');
+
+    // Each [id, progress-threshold] — line fades in when scroll passes threshold
+    const heroLines = [
+      ['hero-line-0', 0.08],
+      ['hero-line-1', 0.18],
+      ['hero-line-2', 0.28],
+      ['hero-line-3', 0.38],
+    ];
+
+    heroVideo.addEventListener('loadedmetadata', function () {
+      heroVideo.pause();
+      heroVideo.currentTime = 0;
+    });
+
+    window.addEventListener('scroll', function () {
+      if (!heroVideo.duration) return;
+      const rect       = heroSection.getBoundingClientRect();
+      const scrolled   = -rect.top;
+      const scrollable = heroSection.offsetHeight - window.innerHeight;
+      const progress   = Math.max(0, Math.min(1, scrolled / scrollable));
+
+      // Scrub video
+      heroVideo.currentTime = progress * heroVideo.duration;
+
+      // Reveal text lines progressively
+      heroLines.forEach(function([id, threshold]) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (progress >= threshold) {
+          el.classList.add('visible');
+        } else {
+          el.classList.remove('visible');
+        }
+      });
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
+
