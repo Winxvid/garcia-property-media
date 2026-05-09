@@ -109,7 +109,7 @@
       top: clamp(60px, 10vw, 200px);
       right: 0;
       width: clamp(80px, 20vw, 200px);
-      height: calc(100vh - clamp(100px, 9vw, 140px));
+      height: calc(100vh - clamp(60px, 10vw, 200px));
       z-index: 80;
       clip-path: inset(0 0 100% 0);
       transition: clip-path 2.8s cubic-bezier(0.23, 1, 0.32, 1);
@@ -474,6 +474,7 @@
           id="hero-video"
           src="Hero_video.MP4"
           muted
+          autoplay
           playsinline
           preload="auto"
           class="absolute inset-0 w-full h-full object-cover"
