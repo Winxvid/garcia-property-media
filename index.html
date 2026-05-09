@@ -106,9 +106,9 @@
     ============================================================ */
     #film-wrapper {
       position: fixed;
-      top: clamp(85px, -8vw, 200px);
+      top: clamp(60px, 10vw, 200px);
       right: 0;
-      width: clamp(100px, 14vw, 200px);
+      width: clamp(80px, 20vw, 200px);
       height: calc(100vh - clamp(100px, 9vw, 140px));
       z-index: 80;
       clip-path: inset(0 0 100% 0);
@@ -179,7 +179,7 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: clamp(140px, 14vw, 150px);
+      width: clamp(80px, 20vw, 150px);
       background: none;
       border: none;
       padding: 0;
@@ -396,12 +396,17 @@
     /* Feature card hover */
     .feature-card { transition: transform 0.5s ease; }
     .feature-card:hover { transform: translateY(-8px); }
+
+    /* Mobile touch optimizations */
+    button { touch-action: manipulation; }
+    * { -webkit-tap-highlight-color: transparent; }
+    body { -webkit-text-size-adjust: 100%; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
   <!-- ===== HEADER ===== -->
-  <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h md:h-40"
+  <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h-20 md:h-40"
           style="background-color:rgba(0,0,0,0.9);">
     <div class="max-w-[1920px] mx-auto h-full px-10 grid grid-cols-3 items-center">
 
@@ -459,7 +464,7 @@
     </nav>
   </div>
 
-  <main class="flex-grow pt-20 md:pt-32">
+  <main class="flex-grow pt-20 md:pt-40">
 
     <!-- ===== HERO ===== -->
     <section id="hero-scroll" class="relative w-full" style="height:300vh;">
@@ -495,7 +500,7 @@
     </section>
 
     <!-- ===== TIMELINE (Recent Properties) ===== -->
-    <section class="w-full overflow-hidden" style="padding:128px 0; background-color:#131313;">
+    <section class="w-full overflow-x-hidden" style="padding:128px 0; background-color:#131313;">
       <div class="mx-auto px-6 md:px-16 mb-16" style="max-width:1440px;">
         <div class="grid grid-cols-12 gap-6 items-end">
           <div class="col-span-12 md:col-span-6 reveal">
@@ -566,7 +571,7 @@
 
           <!-- Track controls -->
           <div class="flex-shrink-0 border-r"
-               style="width:256px; background-color:#1b1b1b; border-color:rgba(255,255,255,0.1);">
+               style="width:clamp(120px,18vw,256px); background-color:#1b1b1b; border-color:rgba(255,255,255,0.1);">
             <div class="h-12 border-b flex items-center px-6"
                  style="border-color:rgba(255,255,255,0.1);">
               <button class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity">
@@ -612,7 +617,7 @@
 
           <!-- Scrollable track area -->
           <div class="flex-grow overflow-x-auto relative scrollbar-hide cursor-crosshair"
-               style="background-color:#0e0e0e;">
+               style="background-color:#0e0e0e; -webkit-overflow-scrolling:touch; touch-action:pan-x;">
             <!-- Time ruler -->
             <div class="h-12 border-b flex items-end px-4 gap-24 text-[9px] font-mono opacity-30 pb-2"
                  style="border-color:rgba(255,255,255,0.1);">
@@ -772,13 +777,13 @@
         </p>
       </div>
       <div class="md:col-span-8 flex flex-wrap items-end md:justify-end" style="gap:24px 48px;">
-        <a href="#" class="uppercase transition-all duration-500 hover:text-accent"
+        <a href="#" class="uppercase transition-all duration-500 hover:text-accent py-3 inline-block"
            style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Instagram</a>
-        <a href="#" class="uppercase transition-all duration-500 hover:text-accent"
+        <a href="#" class="uppercase transition-all duration-500 hover:text-accent py-3 inline-block"
            style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Vimeo</a>
-        <a href="#" class="uppercase transition-all duration-500 hover:text-accent"
+        <a href="#" class="uppercase transition-all duration-500 hover:text-accent py-3 inline-block"
            style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">LinkedIn</a>
-        <a href="#" class="uppercase transition-all duration-500 hover:text-accent"
+        <a href="#" class="uppercase transition-all duration-500 hover:text-accent py-3 inline-block"
            style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Newsletter</a>
       </div>
     </div>
