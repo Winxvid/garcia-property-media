@@ -409,11 +409,12 @@
   <!-- ===== HEADER ===== -->
   <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h-28 md:h-40"
           style="background-color:rgba(0,0,0,0.9);">
-    <div class="h-full flex items-center justify-center px-4 md:px-10">
+    <div class="h-full flex items-center justify-center"
+         style="padding-left: clamp(8px, 4vw, 40px); padding-right: clamp(80px, 20vw, 150px);">
       <img
         src="Garcia_Media_logo.PNG"
         alt="Garcia Property Media"
-        class="h-4/5 w-auto object-contain cursor-pointer anim-fade-down"
+        class="h-4/5 w-auto max-w-full object-contain cursor-pointer anim-fade-down"
         onclick="window.scrollTo({top:0,behavior:'smooth'})"
       />
     </div>
