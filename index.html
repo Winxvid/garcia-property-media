@@ -588,8 +588,7 @@
     * { -webkit-tap-highlight-color: transparent; }
     body { -webkit-text-size-adjust: 100%; }
     /* Instagram footer icon hover */
-    a[aria-label="Follow us on Instagram"]:hover svg { stroke: #d4af37; }
-    a[aria-label="Follow us on Instagram"]:hover span { color: rgba(255,255,255,0.6); }
+    a[aria-label="Follow us on Instagram"]:hover svg { stroke: #d4af37; transform: scale(1.1); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -995,29 +994,35 @@
   </main>
 
   <!-- ===== FOOTER ===== -->
-  <footer class="w-full py-24 px-8 border-t" style="background-color:black; border-color:rgba(255,255,255,0.1);">
-    <div class="mx-auto grid grid-cols-1 md:grid-cols-12 gap-12" style="max-width:1920px;">
-      <div class="md:col-span-4 flex flex-col gap-6">
-        <div class="text-xl font-bold text-white uppercase" style="letter-spacing:0.1em;">
-          Premium Studio Cinema
-        </div>
-        <p class="uppercase" style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">
-          &copy; 2026 Garcia Property Studio.<br />All Rights Reserved.
-        </p>
-      </div>
-      <div class="md:col-span-8 flex flex-wrap items-end md:justify-end">
+  <footer class="w-full border-t" style="background-color:#000; border-color:rgba(255,255,255,0.08);">
+    <div class="mx-auto px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-0" style="max-width:1920px;">
+
+      <!-- SOCIAL — first in DOM = first on mobile (top), pushed right on desktop -->
+      <div class="flex flex-col items-center md:items-end md:order-2 pb-10 md:pb-0">
+        <p class="uppercase mb-4" style="font-family:'Epilogue',sans-serif; font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Follow Us On</p>
         <a href="https://www.instagram.com/garciapropertymedia/" target="_blank" rel="noopener noreferrer"
-           class="flex flex-col items-center gap-3 group" aria-label="Follow us on Instagram">
-          <span class="uppercase" style="font-family:'Epilogue',sans-serif; font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Follow Us On</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+           aria-label="Follow us on Instagram" class="group">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
                fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-               style="transition: stroke 0.3s ease;">
+               style="transition: stroke 0.3s ease, transform 0.3s ease;">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
             <circle cx="12" cy="12" r="4"/>
             <circle cx="17.5" cy="6.5" r="0.5" fill="rgba(255,255,255,0.35)" stroke="none"/>
           </svg>
         </a>
       </div>
+
+      <!-- DIVIDER — mobile only, sits between social and brand -->
+      <div class="block md:hidden w-full border-t mb-10" style="border-color:rgba(255,255,255,0.08);"></div>
+
+      <!-- BRAND — second in DOM = below divider on mobile, left on desktop -->
+      <div class="flex flex-col items-center md:items-start md:order-1 gap-3 text-center md:text-left">
+        <p class="text-white uppercase font-bold" style="font-family:'Epilogue',sans-serif; font-size:13px; letter-spacing:0.18em;">Premium Studio Cinema</p>
+        <p class="uppercase" style="font-family:'Epilogue',sans-serif; font-size:9px; letter-spacing:0.25em; color:rgba(255,255,255,0.25); line-height:1.8;">
+          &copy; 2026 Garcia Property Studio. All Rights Reserved.
+        </p>
+      </div>
+
     </div>
   </footer>
 
