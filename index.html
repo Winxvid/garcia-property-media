@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Garcia Property Media</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Epilogue:ital,wght@0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -398,10 +398,198 @@
     .feature-card { transition: transform 0.5s ease; }
     .feature-card:hover { transform: translateY(-8px); }
 
+    /* Accordion */
+    .accordion-item {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .accordion-item:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
+    .accordion-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #d4af37, transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .accordion-item.active::before { opacity: 1; }
+    .accordion-btn {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 28px 24px 28px 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      transition: background 0.3s ease;
+    }
+    .accordion-btn:hover { background: rgba(255,255,255,0.03); }
+    .accordion-item.active .accordion-btn { background: rgba(212,175,55,0.05); }
+    .accordion-tc {
+      font-family: 'Inter', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.25);
+      flex-shrink: 0;
+      transition: color 0.3s ease;
+      min-width: 64px;
+    }
+    .accordion-item.active .accordion-tc { color: #d4af37; }
+    .accordion-title {
+      flex-grow: 1;
+      font-family: 'Epilogue', sans-serif;
+      font-size: clamp(0.95rem, 2vw, 1.35rem);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      transition: color 0.3s ease;
+    }
+    .accordion-item.active .accordion-title { color: #fff; }
+    .accordion-icon {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.4s ease;
+    }
+    .accordion-item.active .accordion-icon {
+      border-color: #d4af37;
+      background: rgba(212,175,55,0.15);
+      transform: rotate(90deg);
+    }
+    .accordion-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .accordion-item.active .accordion-body { grid-template-rows: 1fr; }
+    .accordion-inner { overflow: hidden; }
+    .accordion-content {
+      padding: 0 24px 32px calc(32px + 64px + 24px);
+      color: rgba(226,226,226,0.75);
+      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+      line-height: 1.75;
+      max-width: 52rem;
+    }
+    @media (max-width: 640px) {
+      .accordion-content { padding: 0 16px 28px 16px; }
+      .accordion-btn { padding: 22px 16px; gap: 14px; }
+      .accordion-tc { min-width: 48px; }
+    }
+
+    /* Video modal */
+    #video-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #video-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #video-modal-inner {
+      position: relative;
+      width: 100%;
+      max-width: min(900px, 95vw);
+      background: #0a0a0a;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
+      transform: scale(0.94);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #video-modal.open #video-modal-inner {
+      transform: scale(1);
+    }
+    #video-modal video {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+    #video-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: #111;
+    }
+    #video-modal-title {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    #video-modal-close {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      flex-shrink: 0;
+    }
+    #video-modal-close:hover {
+      border-color: #d4af37;
+      background: rgba(212,175,55,0.15);
+    }
+    #video-modal-close svg { pointer-events: none; }
+    /* Clip play-button overlay */
+    .clip-play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+    }
+    .group:hover .clip-play-overlay { opacity: 1; }
+    .clip-play-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .group:hover .clip-play-btn { transform: scale(1.1); }
+
     /* Mobile touch optimizations */
     button { touch-action: manipulation; }
     * { -webkit-tap-highlight-color: transparent; }
     body { -webkit-text-size-adjust: 100%; }
+    /* Instagram footer icon hover */
+    a[aria-label="Follow us on Instagram"]:hover svg { stroke: #d4af37; }
+    a[aria-label="Follow us on Instagram"]:hover span { color: rgba(255,255,255,0.6); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -482,10 +670,10 @@
           <div class="col-span-12 md:col-span-10">
             <h2 id="hero-line-0" class="text-sm font-bold uppercase mb-6 hero-line"
                 style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.3em; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
-              Real Estate Videographer
+              Real Estate Videography
             </h2>
-            <h1 class="text-5xl md:text-8xl font-extrabold text-white uppercase"
-                style="font-family:'Epilogue',sans-serif; letter-spacing:-0.05em; line-height:0.9; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;">
+            <h1 class="text-5xl md:text-8xl font-bold text-white"
+                style="font-family:'Cormorant Garamond',serif; font-weight:700; letter-spacing:-0.02em; line-height:0.88; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;">
               <span id="hero-line-1" class="hero-line block">Elevating</span>
               <span id="hero-line-2" class="hero-line block">Architectural</span>
               <span id="hero-line-3" class="hero-line block">Storytelling</span>
@@ -634,38 +822,53 @@
               <!-- Track 1: The Glass Pavilion -->
               <div class="flex items-center relative" style="height:112px;">
                 <div class="absolute rounded border overflow-hidden bg-black group cursor-pointer transition-all hover:border-white/40"
-                     style="left:40px; width:288px; height:80px; border-color:rgba(255,255,255,0.2);">
-                  <img
+                     style="left:40px; width:288px; height:80px; border-color:rgba(255,255,255,0.2);"
+                     onclick="openVideoModal('Marketing sample 1.mov','Sample Video 1')">
+                  <video
                     class="w-full h-full object-cover grayscale opacity-60 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBd0vBtZ0QX9Jhccj1e6sjOOHWTjuXcEbeIlYLEd53Vgvy5UCVVX7YXU9aKn8LTLlHD3ONxNJcsUTlU1qOFvjKnFwvXSrIf6QScGkviyZ7gnjfA1AMDSyX14m0tKyd8p6fmNsCTzQWMBwuhvtFg311eT-12rVZTnvfMrveL-w6iG0_SkbSHq8NW-8tbnvdoGE9ZGEEtmBNpwKt_t3t-PzS2jN3fbfSm43_wf39BtUDo-JDYmcEv8M1A-mQDcxamNf-lJ2bUU48Sk2GU"
-                    alt="The Glass Pavilion"
-                  />
+                    src="Marketing sample 1.mov#t=0.333"
+                    muted
+                    playsinline
+                    preload="metadata"
+                    style="pointer-events:none;"
+                  ></video>
+                  <!-- Play overlay -->
+                  <div class="clip-play-overlay">
+                    <div class="clip-play-btn">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                  </div>
                   <div class="absolute bottom-0 left-0 right-0 px-3 py-1.5 border-t"
                        style="background-color:rgba(0,0,0,0.9); border-color:rgba(255,255,255,0.05);">
                     <p class="text-[9px] uppercase font-bold"
-                       style="letter-spacing:0.15em; color:rgba(255,255,255,0.9);">The Glass Pavilion</p>
+                       style="letter-spacing:0.15em; color:rgba(255,255,255,0.9);">Sample Video 1</p>
                   </div>
                 </div>
               </div>
 
               <!-- Track 2: Skyline Penthouse (active) -->
               <div class="flex items-center relative" style="height:112px;">
-                <div class="absolute rounded cursor-pointer"
-                     style="left:300px; width:500px; height:80px; border:2px solid rgba(229,118,0,0.8); background-color:rgba(229,118,0,0.2); box-shadow:0 0 20px rgba(229,118,0,0.2);">
-                  <div class="flex h-full">
-                    <img
-                      class="w-1/4 h-full object-cover opacity-80"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHER1P_4hK-BGwX2dxYtBL3TsO_qftVdGPX1opbejb60-EASrQ-mcVOguNcc6ah8qYITiiDa8rA4rN2Yj-527tOY3L10Jy4KCaDxYtihwxSXgOjf49JrN2pT9prphr6GFC2QOmFYNXJBjLql_z-fkFUoB4ZJQedo9uTNlHeZXzXB7P1bIfXEjMjjUGMgDc6V0hapjdUkJL9bnMV3AU7peb63_ya_TWhgKY3rQY_cmrCtKB4Oq1Bwc2zsI1ylhXJxPCaKtQ3tzAy_CO"
-                      alt="Skyline Penthouse"
-                    />
-                    <div class="w-1/4 h-full border-r" style="background-color:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1);"></div>
-                    <div class="w-1/4 h-full border-r" style="background-color:rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.1);"></div>
-                    <div class="w-1/4 h-full" style="background-color:rgba(255,255,255,0.05);"></div>
+                <div class="absolute rounded overflow-hidden group cursor-pointer"
+                     style="left:300px; width:500px; height:80px; border:2px solid rgba(229,118,0,0.8); box-shadow:0 0 20px rgba(229,118,0,0.2);"
+                     onclick="openVideoModal('Marketing sample 2.mov','Sample Video 2')">
+                  <video
+                    class="w-full h-full object-cover opacity-80 transition-all duration-700 group-hover:opacity-100"
+                    src="Marketing sample 2.mov#t=0.333"
+                    muted
+                    playsinline
+                    preload="metadata"
+                    style="pointer-events:none;"
+                  ></video>
+                  <!-- Play overlay -->
+                  <div class="clip-play-overlay">
+                    <div class="clip-play-btn">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
                   </div>
                   <div class="absolute bottom-0 left-0 right-0 px-3 py-1.5"
                        style="background-color:#e57600;">
                     <p class="text-[9px] uppercase font-black text-white"
-                       style="letter-spacing:0.2em;">Skyline Penthouse — EDITING</p>
+                       style="letter-spacing:0.2em;">Sample Video 2 — EDITING</p>
                   </div>
                   <!-- Trim handles -->
                   <div class="absolute rounded-sm border"
@@ -678,16 +881,26 @@
               <!-- Track 3: Ocean View Villa -->
               <div class="flex items-center relative" style="height:112px;">
                 <div class="absolute rounded border overflow-hidden bg-black group cursor-pointer transition-all hover:border-white/40"
-                     style="left:850px; width:320px; height:80px; border-color:rgba(255,255,255,0.2);">
-                  <img
-                    class="w-full h-full object-cover opacity-40 transition-opacity duration-700 group-hover:opacity-100"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHER1P_4hK-BGwX2dxYtBL3TsO_qftVdGPX1opbejb60-EASrQ-mcVOguNcc6ah8qYITiiDa8rA4rN2Yj-527tOY3L10Jy4KCaDxYtihwxSXgOjf49JrN2pT9prphr6GFC2QOmFYNXJBjLql_z-fkFUoB4ZJQedo9uTNlHeZXzXB7P1bIfXEjMjjUGMgDc6V0hapjdUkJL9bnMV3AU7peb63_ya_TWhgKY3rQY_cmrCtKB4Oq1Bwc2zsI1ylhXJxPCaKtQ3tzAy_CO"
-                    alt="Ocean View Villa"
-                  />
+                     style="left:850px; width:320px; height:80px; border-color:rgba(255,255,255,0.2);"
+                     onclick="openVideoModal('Marketing sample 3.MOV','Sample Video 3')">
+                  <video
+                    class="w-full h-full object-cover opacity-40 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100"
+                    src="Marketing sample 3.MOV#t=0.333"
+                    muted
+                    playsinline
+                    preload="metadata"
+                    style="pointer-events:none;"
+                  ></video>
+                  <!-- Play overlay -->
+                  <div class="clip-play-overlay">
+                    <div class="clip-play-btn">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                  </div>
                   <div class="absolute bottom-0 left-0 right-0 px-3 py-1.5 border-t"
                        style="background-color:rgba(0,0,0,0.9); border-color:rgba(255,255,255,0.05);">
                     <p class="text-[9px] uppercase font-bold"
-                       style="letter-spacing:0.15em; color:rgba(255,255,255,0.9);">Ocean View Villa</p>
+                       style="letter-spacing:0.15em; color:rgba(255,255,255,0.9);">Sample Video 3</p>
                   </div>
                 </div>
               </div>
@@ -713,46 +926,66 @@
           Why Hire Us?
         </h2>
 
-        <div class="flex flex-col mx-auto" style="gap:48px; max-width:64rem;">
+        <div id="why-accordion" class="reveal" style="max-width:64rem; margin:0 auto;">
 
-          <div class="luxury-card gold-border-effect feature-card reveal p-8 md:p-14">
-            <h3 class="text-2xl md:text-3xl font-bold mb-8"
-                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.15em;">
-              MOBILE CINEMATIC CAPTURE
-            </h3>
-            <p class="leading-relaxed text-sm md:text-lg opacity-80" style="color:#e2e2e2; max-width:48rem;">
-              We don't drag around $20k camera rigs. We shoot with the latest flagship smartphones — delivering battery-smooth 4K, incredible low-light performance, and natural, intimate perspectives that feel alive. No bulky equipment means faster shoots, zero disruption to your sellers, and the freedom to capture creative angles in tight spaces that traditional crews simply can't reach.
-            </p>
+          <div class="accordion-item active">
+            <button class="accordion-btn" aria-expanded="true">
+              <span class="accordion-tc">TC 01:00</span>
+              <span class="accordion-title">Mobile Cinematic Capture</span>
+              <span class="accordion-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
+            </button>
+            <div class="accordion-body" role="region">
+              <div class="accordion-inner">
+                <p class="accordion-content">We don't drag around $20k camera rigs. We shoot with the latest flagship smartphones — delivering buttery-smooth 4K, incredible low-light performance, and natural, intimate perspectives that feel alive. No bulky equipment means faster shoots, zero disruption to your sellers, and the freedom to capture creative angles in tight spaces that traditional crews simply can't reach.</p>
+              </div>
+            </div>
           </div>
 
-          <div class="luxury-card gold-border-effect feature-card reveal p-8 md:p-14">
-            <h3 class="text-2xl md:text-3xl font-bold mb-8"
-                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.15em;">
-              AI-POWERED TRANSFORMATION
-            </h3>
-            <p class="leading-relaxed text-sm md:text-lg opacity-80" style="color:#e2e2e2; max-width:48rem;">
-              Raw footage is just the starting point. We upload every clip to cutting-edge AI video platforms that intelligently stabilize, enhance lighting, generate cinematic motion, create smooth dolly zooms, and elevate colors to Hollywood standards. The result? Videos that look like they were shot on a professional cinema camera — but delivered in a fraction of the time and cost.
-            </p>
+          <div class="accordion-item">
+            <button class="accordion-btn" aria-expanded="false">
+              <span class="accordion-tc">TC 02:00</span>
+              <span class="accordion-title">AI-Powered Transformation</span>
+              <span class="accordion-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
+            </button>
+            <div class="accordion-body" role="region">
+              <div class="accordion-inner">
+                <p class="accordion-content">Raw footage is just the starting point. We upload every clip to cutting-edge AI video platforms that intelligently stabilize, enhance lighting, generate cinematic motion, create smooth dolly zooms, and elevate colors to Hollywood standards. The result? Videos that look like they were shot on a professional cinema camera — but delivered in a fraction of the time and cost.</p>
+              </div>
+            </div>
           </div>
 
-          <div class="luxury-card gold-border-effect feature-card reveal p-8 md:p-14">
-            <h3 class="text-2xl md:text-3xl font-bold mb-8"
-                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.15em;">
-              CAPCUT MASTERY &amp; EDITORIAL POLISH
-            </h3>
-            <p class="leading-relaxed text-sm md:text-lg opacity-80" style="color:#e2e2e2; max-width:48rem;">
-              This is where good becomes unforgettable. Using professional CapCut workflows and advanced editing tools, we craft custom sound design, elegant transitions, dynamic text overlays, trending effects, and perfectly paced storytelling. Every video is color-graded, music-synced, and optimized for maximum emotional impact — the kind of polish that makes viewers stop scrolling and say, "I have to see this house."
-            </p>
+          <div class="accordion-item">
+            <button class="accordion-btn" aria-expanded="false">
+              <span class="accordion-tc">TC 03:00</span>
+              <span class="accordion-title">CapCut Mastery &amp; Editorial Polish</span>
+              <span class="accordion-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
+            </button>
+            <div class="accordion-body" role="region">
+              <div class="accordion-inner">
+                <p class="accordion-content">This is where good becomes unforgettable. Using professional CapCut workflows and advanced editing tools, we craft custom sound design, elegant transitions, dynamic text overlays, trending effects, and perfectly paced storytelling. Every video is color-graded, music-synced, and optimized for maximum emotional impact — the kind of polish that makes viewers stop scrolling and say, "I have to see this house."</p>
+              </div>
+            </div>
           </div>
 
-          <div class="luxury-card gold-border-effect feature-card reveal p-8 md:p-14">
-            <h3 class="text-2xl md:text-3xl font-bold mb-8"
-                style="font-family:'Epilogue',sans-serif; color:#ffb784; letter-spacing:0.15em;">
-              REAL ESTATE SALES ACCELERATOR
-            </h3>
-            <p class="leading-relaxed text-sm md:text-lg opacity-80" style="color:#e2e2e2; max-width:48rem;">
-              We don't just film properties — we sell dreams. Our videos are engineered to highlight lifestyle, light, flow, and potential in ways that create instant emotional connection. Agents who work with us consistently report higher engagement, more showings, longer watch times, and properties that sell faster and for stronger offers.
-            </p>
+          <div class="accordion-item">
+            <button class="accordion-btn" aria-expanded="false">
+              <span class="accordion-tc">TC 04:00</span>
+              <span class="accordion-title">Real Estate Sales Accelerator</span>
+              <span class="accordion-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
+            </button>
+            <div class="accordion-body" role="region">
+              <div class="accordion-inner">
+                <p class="accordion-content">We don't just film properties — we sell dreams. Our videos are engineered to highlight lifestyle, light, flow, and potential in ways that create instant emotional connection. Agents who work with us consistently report higher engagement, more showings, longer watch times, and properties that sell faster and for stronger offers.</p>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -772,15 +1005,18 @@
           &copy; 2026 Garcia Property Studio.<br />All Rights Reserved.
         </p>
       </div>
-      <div class="md:col-span-8 flex flex-wrap items-end md:justify-end" style="gap:24px 48px;">
-        <a href="#" class="uppercase transition-all duration-500 hover:text-accent py-3 inline-block"
-           style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Instagram</a>
-        <a href="#" class="uppercase transition-all duration-500 hover:text-accent py-3 inline-block"
-           style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Vimeo</a>
-        <a href="#" class="uppercase transition-all duration-500 hover:text-accent py-3 inline-block"
-           style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">LinkedIn</a>
-        <a href="#" class="uppercase transition-all duration-500 hover:text-accent py-3 inline-block"
-           style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Newsletter</a>
+      <div class="md:col-span-8 flex flex-wrap items-end md:justify-end">
+        <a href="https://www.instagram.com/garciapropertymedia/" target="_blank" rel="noopener noreferrer"
+           class="flex flex-col items-center gap-3 group" aria-label="Follow us on Instagram">
+          <span class="uppercase" style="font-family:'Epilogue',sans-serif; font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Follow Us On</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+               fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+               style="transition: stroke 0.3s ease;">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.5" fill="rgba(255,255,255,0.35)" stroke="none"/>
+          </svg>
+        </a>
       </div>
     </div>
   </footer>
@@ -817,6 +1053,22 @@
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Accordion
+    document.getElementById('why-accordion').addEventListener('click', function(e) {
+      const btn = e.target.closest('.accordion-btn');
+      if (!btn) return;
+      const item = btn.closest('.accordion-item');
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('#why-accordion .accordion-item').forEach(function(el) {
+        el.classList.remove('active');
+        el.querySelector('.accordion-btn').setAttribute('aria-expanded', 'false');
+      });
+      if (!isActive) {
+        item.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
 
     // Scroll-scrubbed hero video + text reveals
     const heroVideo   = document.getElementById('hero-video');
@@ -856,6 +1108,59 @@
         }
       });
     }, { passive: true });
+
+    // Video modal
+    function openVideoModal(src, title) {
+      var modal = document.getElementById('video-modal');
+      var vid   = document.getElementById('video-modal-vid');
+      var ttl   = document.getElementById('video-modal-title');
+      vid.pause();
+      vid.src = src;
+      ttl.textContent = title;
+      modal.setAttribute('aria-label', title);
+      modal.classList.add('open');
+      document.body.classList.add('menu-open');
+      vid.load();
+      vid.play().catch(function(){});
+    }
+    function closeVideoModal() {
+      var modal = document.getElementById('video-modal');
+      var vid   = document.getElementById('video-modal-vid');
+      modal.classList.remove('open');
+      document.body.classList.remove('menu-open');
+      vid.pause();
+      vid.currentTime = 0;
+    }
+  </script>
+
+  <!-- Video lightbox modal -->
+  <div id="video-modal" role="dialog" aria-modal="true" aria-label="Sample Video 1"
+       onclick="if(event.target===this)closeVideoModal()">
+    <div id="video-modal-inner">
+      <div id="video-modal-header">
+        <span id="video-modal-title">Sample Video 1</span>
+        <button id="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <video id="video-modal-vid"
+             src="Marketing sample 1.mov"
+             controls
+             playsinline
+             preload="none"
+             style="width:100%;display:block;aspect-ratio:16/9;background:#000;"
+      ></video>
+    </div>
+  </div>
+
+  <script>
+    // ESC closes modal too
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeVideoModal();
+        closeMenu();
+      }
+    });
   </script>
 
 </body>
