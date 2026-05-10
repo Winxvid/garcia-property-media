@@ -589,6 +589,15 @@
     body { -webkit-text-size-adjust: 100%; }
     /* Instagram footer icon hover */
     a[aria-label="Follow us on Instagram"]:hover svg { stroke: #d4af37; transform: scale(1.1); }
+    /* Header inner padding (overridable via media query) */
+    #header-inner { padding-left: clamp(8px, 4vw, 40px); padding-right: clamp(80px, 20vw, 150px); }
+    /* Mobile-only: wider film strip menu */
+    @media (max-width: 767px) {
+      #film-wrapper { width: 55vw; max-width: 260px; }
+      #menu-btn     { width: 55vw; max-width: 240px; }
+      #header-inner { padding-right: 55vw; max-width: none; }
+      #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -596,8 +605,7 @@
   <!-- ===== HEADER ===== -->
   <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h-28 md:h-40"
           style="background-color:rgba(0,0,0,0.9);">
-    <div class="h-full flex items-center justify-center"
-         style="padding-left: clamp(8px, 4vw, 40px); padding-right: clamp(80px, 20vw, 150px);">
+    <div id="header-inner" class="h-full flex items-center justify-center">
       <img
         src="Garcia_Media_logo.PNG"
         alt="Garcia Property Media"
