@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Garcia Property Media</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Epilogue:ital,wght@0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: '#131313',
+            'on-surface': '#e2e2e2',
+            'on-surface-variant': '#e2e2e2',
+            secondary: '#ffb784',
+            primary: '#ffffff',
+            accent: '#e57600',
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['Epilogue', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #131313;
+      color: #e2e2e2;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 25%, #c5a028 50%, #d4af37 75%, #f3e5ab 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .anim-fade-down { animation: fadeInDown 0.6s ease forwards; }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Film canister menu */
+    #film-wrapper {
+      position: fixed;
+      top: clamp(50px, 6vw, 80px);
+      right: 0;
+      width: clamp(80px, 20vw, 200px);
+      height: calc(100vh - clamp(50px, 6vw, 80px));
+      height: calc(100svh - clamp(50px, 6vw, 80px));
+      z-index: 80;
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 2.8s cubic-bezier(0.23, 1, 0.32, 1);
+      pointer-events: none;
+      overflow: hidden;
+      background: #6c3e1d;
+    }
+    #film-wrapper.open { clip-path: inset(0 0 0% 0); }
+    #film-full-img { display: none; }
+    #film-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 18px; height: 100%;
+      background: repeating-linear-gradient(to bottom, #1a1a1a 0px, #1a1a1a 14px, transparent 14px, transparent 28px);
+      border-right: 8px solid #1a1a1a;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .sprocket-right {
+      position: absolute;
+      top: 0; right: 0;
+      width: 18px; height: 100%;
+      background: repeating-linear-gradient(to bottom, #1a1a1a 0px, #1a1a1a 14px, transparent 14px, transparent 28px);
+      border-left: 8px solid #1a1a1a;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .film-content {
+      position: absolute;
+      inset: 0; left: 21px; right: 21px;
+      display: flex; flex-direction: column;
+      background: #7a3f18;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+    #menu-btn {
+      position: fixed;
+      top: 0; right: 0;
+      width: clamp(80px, 20vw, 150px);
+      background: none; border: none;
+      padding: 0; cursor: pointer;
+      z-index: 70;
+      filter: drop-shadow(-4px 4px 18px rgba(0,0,0,0.85));
+      transition: transform 0.2s ease;
+    }
+    #menu-btn:hover { transform: scale(1.05); }
+    #menu-btn:active { transform: scale(0.97); }
+    #menu-btn img { width: 100%; height: auto; display: block; }
+    #menu-btn-inner { position: relative; display: block; }
+    .menu-icon {
+      position: absolute;
+      top: 26%; left: 56%;
+      transform: translate(-50%, -50%);
+      width: 24%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 13%;
+      transition: opacity 0.2s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+    .menu-icon svg { width: 100%; height: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5)); }
+    #icon-hamburger { opacity: 1; }
+    #icon-close     { opacity: 0; transform: translate(-50%, -50%) rotate(-90deg) scale(0.7); }
+    body.menu-open #icon-hamburger { opacity: 0; transform: translate(-50%, -50%) rotate(90deg) scale(0.7); }
+    body.menu-open #icon-close     { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+    #film-nav {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      pointer-events: none; z-index: 5;
+    }
+    #film-wrapper.open #film-nav { pointer-events: auto; }
+    #film-nav a {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translateX(14px);
+      font-family: 'Epilogue', sans-serif;
+      font-size: clamp(0.75rem, 1.15vw, 1rem);
+      font-weight: 900;
+      color: #f4e4c0;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      transition: color 0.25s ease, text-shadow 0.25s ease;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      white-space: nowrap;
+      pointer-events: auto;
+      border-bottom: 1px solid rgba(0,0,0,0.3);
+    }
+    #film-nav a:last-child { border-bottom: none; }
+    #film-nav a:nth-child(1) { background: url('Hamburger_home.jpg') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(2) { background: url('Hamburger_about.webp') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(3) { background: url('Hamburger_services.webp') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(4) { background: url('Hamburger_portfolio.avif') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(5) { background: url('Hamburger_quote.jpg') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(1)::before,
+    #film-nav a:nth-child(2)::before,
+    #film-nav a:nth-child(3)::before,
+    #film-nav a:nth-child(4)::before,
+    #film-nav a:nth-child(5)::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, rgba(120,55,10,0.84) 0%, rgba(55,22,4,0.90) 100%);
+      transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1; pointer-events: none;
+    }
+    #film-nav a:nth-child(1):hover::before,
+    #film-nav a:nth-child(2):hover::before,
+    #film-nav a:nth-child(3):hover::before,
+    #film-nav a:nth-child(4):hover::before,
+    #film-nav a:nth-child(5):hover::before { opacity: 0.18; }
+    #film-nav a:nth-child(1)::after,
+    #film-nav a:nth-child(2)::after,
+    #film-nav a:nth-child(3)::after,
+    #film-nav a:nth-child(4)::after,
+    #film-nav a:nth-child(5)::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(to bottom, #111 0px, #111 13px, transparent 13px, transparent 27px),
+        repeating-linear-gradient(to bottom, #111 0px, #111 13px, transparent 13px, transparent 27px);
+      background-size: 16px 100%, 16px 100%;
+      background-position: left center, right center;
+      background-repeat: repeat-y, repeat-y;
+      pointer-events: none; z-index: 2;
+    }
+    .nav-label { position: relative; z-index: 3; }
+    #film-nav a:hover { color: #fff8e7; text-shadow: 0 0 16px rgba(255,220,150,0.8); }
+    #film-wrapper.open #film-nav a { animation: filmLinkIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    #film-wrapper.open #film-nav a:nth-child(1) { animation-delay: 0.48s; }
+    #film-wrapper.open #film-nav a:nth-child(2) { animation-delay: 0.60s; }
+    #film-wrapper.open #film-nav a:nth-child(3) { animation-delay: 0.72s; }
+    #film-wrapper.open #film-nav a:nth-child(4) { animation-delay: 0.84s; }
+    #film-wrapper.open #film-nav a:nth-child(5) { animation-delay: 0.96s; }
+    @keyframes filmLinkIn {
+      from { opacity: 0; transform: translateX(14px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    #backdrop {
+      pointer-events: none; opacity: 0;
+      transition: opacity 0.45s ease;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    #backdrop.open { pointer-events: auto; opacity: 1; }
+    body.menu-open { overflow: hidden; }
+    #header-inner { padding-left: clamp(8px, 4vw, 40px); padding-right: clamp(80px, 20vw, 150px); }
+
+    /* Page-specific */
+    .page-hero {
+      position: relative;
+      min-height: 70vh;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0e00 50%, #0d0d0d 100%);
+    }
+    .page-hero-grain {
+      position: absolute; inset: 0;
+      opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 256px;
+    }
+    .divider-line {
+      width: 60px; height: 1px;
+      background: linear-gradient(to right, #d4af37, transparent);
+    }
+    .stat-card {
+      border: 1px solid rgba(212,175,55,0.2);
+      background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, transparent 100%);
+      padding: 32px 24px;
+      text-align: center;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .stat-card:hover {
+      border-color: rgba(212,175,55,0.5);
+      background: linear-gradient(180deg, rgba(212,175,55,0.1) 0%, transparent 100%);
+    }
+    .value-card {
+      padding: 40px 32px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: linear-gradient(160deg, #1a1a1a 0%, #111 100%);
+      transition: border-color 0.3s ease, transform 0.4s ease;
+    }
+    .value-card:hover {
+      border-color: rgba(212,175,55,0.25);
+      transform: translateY(-6px);
+    }
+    button { touch-action: manipulation; }
+    * { -webkit-tap-highlight-color: transparent; }
+    body { -webkit-text-size-adjust: 100%; }
+    a[aria-label="Follow us on Instagram"]:hover svg { stroke: #d4af37; transform: scale(1.1); }
+    @media (max-width: 767px) {
+      #film-wrapper { width: 55vw; max-width: 260px; }
+      #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ===== HEADER ===== -->
+  <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h-28 md:h-40"
+          style="background-color:rgba(0,0,0,0.9);">
+    <div id="header-inner" class="h-full flex items-center justify-center">
+      <img
+        src="Garcia_Media_logo.PNG"
+        alt="Garcia Property Media"
+        class="h-4/5 w-auto max-w-full object-contain cursor-pointer anim-fade-down"
+        onclick="window.location.href='index.html'"
+      />
+    </div>
+  </header>
+
+  <!-- Backdrop -->
+  <div id="backdrop" class="fixed inset-0 z-40" onclick="closeMenu()"></div>
+
+  <!-- Canister icon button -->
+  <button id="menu-btn" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false">
+    <span id="menu-btn-inner">
+      <img src="Hamburger_film1.PNG" alt="Menu" />
+      <span id="icon-hamburger" class="menu-icon">
+        <svg viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect y="0"  width="40" height="5" rx="2.5" fill="#1a0e00"/>
+          <rect y="11" width="40" height="5" rx="2.5" fill="#1a0e00"/>
+          <rect y="23" width="40" height="5" rx="2.5" fill="#1a0e00"/>
+        </svg>
+      </span>
+      <span id="icon-close" class="menu-icon">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="2" y1="2" x2="34" y2="34" stroke="#1a0e00" stroke-width="5" stroke-linecap="round"/>
+          <line x1="34" y1="2" x2="2"  y2="34" stroke="#1a0e00" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </span>
+  </button>
+
+  <!-- Film strip panel -->
+  <div id="film-wrapper">
+    <div class="sprocket-right"></div>
+    <div class="film-content"></div>
+    <img id="film-full-img" src="House_neg_filmroll.png" alt="" aria-hidden="true" />
+    <nav id="film-nav" aria-label="Site navigation">
+      <a href="index.html" onclick="closeMenu()"><span class="nav-label">Home</span></a>
+      <a href="about.html" onclick="closeMenu()"><span class="nav-label">About</span></a>
+      <a href="services.html" onclick="closeMenu()"><span class="nav-label">Services</span></a>
+      <a href="portfolio.html" onclick="closeMenu()"><span class="nav-label">Portfolio</span></a>
+      <a href="quote.html" onclick="closeMenu()"><span class="nav-label">Quote</span></a>
+    </nav>
+  </div>
+
+  <main class="flex-grow pt-28 md:pt-40">
+
+    <!-- ===== PAGE HERO ===== -->
+    <section class="page-hero">
+      <div class="page-hero-bg"></div>
+      <div class="page-hero-grain"></div>
+
+      <!-- Film grain scanline overlay -->
+      <div class="absolute inset-0 pointer-events-none"
+           style="background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);"></div>
+
+      <div class="relative z-10 w-full mx-auto px-6 md:px-16 pb-20 md:pb-28" style="max-width:1440px;">
+        <p class="uppercase mb-4" style="font-family:'Epilogue',sans-serif; font-size:11px; letter-spacing:0.35em; color:#d4af37;">
+          Garcia Property Media
+        </p>
+        <h1 class="text-6xl md:text-9xl font-bold text-white mb-6"
+            style="font-family:'Cormorant Garamond',serif; font-weight:700; letter-spacing:-0.02em; line-height:0.88;">
+          Behind<br/><em>the Lens</em>
+        </h1>
+        <div class="divider-line mt-10"></div>
+      </div>
+    </section>
+
+    <!-- ===== STORY ===== -->
+    <section style="padding:120px 0; background-color:#131313;">
+      <div class="mx-auto px-6 md:px-16" style="max-width:1440px;">
+        <div class="grid grid-cols-12 gap-12 md:gap-20 items-start">
+
+          <div class="col-span-12 md:col-span-5 reveal">
+            <p class="uppercase mb-4" style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:#d4af37;">Our Story</p>
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-8"
+                style="font-family:'Epilogue',sans-serif; line-height:1.1;">
+              We Believe Every Property Has a Story Worth Telling
+            </h2>
+            <div class="divider-line mb-8"></div>
+            <p class="leading-relaxed mb-6" style="color:rgba(226,226,226,0.7); font-size:1.05rem;">
+              Garcia Property Media was born from a simple conviction: that real estate deserved the same cinematic reverence as feature film. Too many listings were reduced to flat, uninspired photography — spaces stripped of their warmth, their scale, their soul.
+            </p>
+            <p class="leading-relaxed" style="color:rgba(226,226,226,0.7); font-size:1.05rem;">
+              We set out to change that. Armed with the latest mobile cinema technology, AI-powered post-production, and a storyteller's instinct, we craft videos that don't just document a home — they invite the viewer inside, stir an emotional response, and compel action.
+            </p>
+          </div>
+
+          <div class="col-span-12 md:col-span-7 reveal">
+            <!-- Cinematic quote card -->
+            <div style="background:linear-gradient(160deg,#1a1a1a,#0f0f0f); border:1px solid rgba(212,175,55,0.2); padding:48px 40px; position:relative; overflow:hidden;">
+              <div style="position:absolute; top:-20px; left:32px; font-size:160px; line-height:1; color:rgba(212,175,55,0.07); font-family:'Cormorant Garamond',serif; font-weight:700; pointer-events:none;">"</div>
+              <blockquote class="relative z-10">
+                <p class="text-2xl md:text-3xl font-light italic mb-8 leading-relaxed"
+                   style="font-family:'Cormorant Garamond',serif; color:#f0e8d0; line-height:1.5;">
+                  Every frame is a decision. Every cut is intentional. We don't shoot footage — we craft the narrative that sells the dream.
+                </p>
+                <footer>
+                  <p class="uppercase font-bold" style="font-family:'Epilogue',sans-serif; font-size:11px; letter-spacing:0.25em; color:#d4af37;">Garcia Property Media</p>
+                  <p style="font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:0.1em; margin-top:4px;">FOUNDED IN HOUSTON, TX</p>
+                </footer>
+              </blockquote>
+            </div>
+
+            <!-- Stats row -->
+            <div class="grid grid-cols-3 gap-px mt-px" style="background:rgba(212,175,55,0.15);">
+              <div class="stat-card" style="background:#131313;">
+                <p class="gold-gradient-text text-4xl font-bold mb-1" style="font-family:'Epilogue',sans-serif;">50+</p>
+                <p style="font-size:10px; letter-spacing:0.2em; color:rgba(255,255,255,0.4); text-transform:uppercase;">Properties Filmed</p>
+              </div>
+              <div class="stat-card" style="background:#131313;">
+                <p class="gold-gradient-text text-4xl font-bold mb-1" style="font-family:'Epilogue',sans-serif;">4K</p>
+                <p style="font-size:10px; letter-spacing:0.2em; color:rgba(255,255,255,0.4); text-transform:uppercase;">Cinematic Quality</p>
+              </div>
+              <div class="stat-card" style="background:#131313;">
+                <p class="gold-gradient-text text-4xl font-bold mb-1" style="font-family:'Epilogue',sans-serif;">48hr</p>
+                <p style="font-size:10px; letter-spacing:0.2em; color:rgba(255,255,255,0.4); text-transform:uppercase;">Turnaround</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== APPROACH ===== -->
+    <section style="padding:120px 0; background-color:#0d0d0d;">
+      <div class="mx-auto px-6 md:px-16" style="max-width:1440px;">
+        <div class="text-center mb-20 reveal">
+          <p class="uppercase mb-4" style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:#d4af37;">Methodology</p>
+          <h2 class="gold-gradient-text text-5xl md:text-7xl font-bold italic"
+              style="font-family:'Epilogue',sans-serif;">The Approach</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div class="value-card reveal">
+            <!-- Frame counter badge -->
+            <p style="font-family:'Inter',monospace; font-size:10px; letter-spacing:0.25em; color:rgba(212,175,55,0.6); margin-bottom:24px;">FRAME 01</p>
+            <h3 class="text-xl font-bold text-white mb-4" style="font-family:'Epilogue',sans-serif; letter-spacing:0.05em;">Mobile Cinema First</h3>
+            <p class="leading-relaxed" style="color:rgba(226,226,226,0.6); font-size:0.95rem;">
+              We shoot with the latest flagship smartphones — compact, agile, and capable of stunning 4K imagery in any lighting condition. No heavy rigs, no disruption, no wasted time.
+            </p>
+          </div>
+
+          <div class="value-card reveal" style="transition-delay:0.15s;">
+            <p style="font-family:'Inter',monospace; font-size:10px; letter-spacing:0.25em; color:rgba(212,175,55,0.6); margin-bottom:24px;">FRAME 02</p>
+            <h3 class="text-xl font-bold text-white mb-4" style="font-family:'Epilogue',sans-serif; letter-spacing:0.05em;">AI-Powered Post</h3>
+            <p class="leading-relaxed" style="color:rgba(226,226,226,0.6); font-size:0.95rem;">
+              Raw footage enters our AI pipeline where it's stabilized, color-elevated, and transformed with cinematic motion — dolly zooms, smooth pans, Hollywood-grade grading. All automated, all precise.
+            </p>
+          </div>
+
+          <div class="value-card reveal" style="transition-delay:0.3s;">
+            <p style="font-family:'Inter',monospace; font-size:10px; letter-spacing:0.25em; color:rgba(212,175,55,0.6); margin-bottom:24px;">FRAME 03</p>
+            <h3 class="text-xl font-bold text-white mb-4" style="font-family:'Epilogue',sans-serif; letter-spacing:0.05em;">Editorial Mastery</h3>
+            <p class="leading-relaxed" style="color:rgba(226,226,226,0.6); font-size:0.95rem;">
+              Music, sound design, pacing, text overlays — every edit is crafted to hold attention and build desire. We don't deliver footage. We deliver a finished story, ready to post.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MISSION ===== -->
+    <section style="padding:120px 0; background-color:#131313;">
+      <div class="mx-auto px-6 md:px-16 text-center" style="max-width:900px;">
+        <div class="reveal">
+          <p class="uppercase mb-6" style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.35em; color:#d4af37;">Mission</p>
+          <h2 class="text-4xl md:text-6xl font-bold text-white mb-10 leading-tight"
+              style="font-family:'Cormorant Garamond',serif; font-weight:600; font-style:italic;">
+            To make every property unforgettable — one frame at a time.
+          </h2>
+          <a href="quote.html"
+             class="inline-block px-10 py-4 border border-white/20 text-white uppercase font-bold tracking-widest text-xs transition-all duration-300 hover:border-yellow-600 hover:bg-yellow-900/20"
+             style="font-family:'Epilogue',sans-serif; letter-spacing:0.3em;">
+            Work With Us
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="w-full border-t" style="background-color:#000; border-color:rgba(255,255,255,0.08);">
+    <div class="mx-auto px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-0" style="max-width:1920px;">
+      <div class="flex flex-col items-center md:items-end md:order-2 pb-10 md:pb-0">
+        <p class="uppercase mb-4" style="font-family:'Epilogue',sans-serif; font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Follow Us On</p>
+        <a href="https://www.instagram.com/garciapropertymedia/" target="_blank" rel="noopener noreferrer"
+           aria-label="Follow us on Instagram" class="group">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+               fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+               style="transition: stroke 0.3s ease, transform 0.3s ease;">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.5" fill="rgba(255,255,255,0.35)" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+      <div class="block md:hidden w-full border-t mb-10" style="border-color:rgba(255,255,255,0.08);"></div>
+      <div class="flex flex-col items-center md:items-start md:order-1 gap-3 text-center md:text-left">
+        <p class="text-white uppercase font-bold" style="font-family:'Epilogue',sans-serif; font-size:13px; letter-spacing:0.18em;">Premium Studio Cinema</p>
+        <p class="uppercase" style="font-family:'Epilogue',sans-serif; font-size:9px; letter-spacing:0.25em; color:rgba(255,255,255,0.25); line-height:1.8;">
+          &copy; 2026 Garcia Property Studio. All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const wrapper  = document.getElementById('film-wrapper');
+      const backdrop = document.getElementById('backdrop');
+      const btn      = document.getElementById('menu-btn');
+      const isOpen   = wrapper.classList.toggle('open');
+      backdrop.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+    function closeMenu() {
+      document.getElementById('film-wrapper').classList.remove('open');
+      document.getElementById('backdrop').classList.remove('open');
+      document.body.classList.remove('menu-open');
+      document.getElementById('menu-btn').setAttribute('aria-expanded', 'false');
+    }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

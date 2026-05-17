@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Garcia Property Media</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Epilogue:ital,wght@0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: '#131313',
+            'on-surface': '#e2e2e2',
+            secondary: '#ffb784',
+            primary: '#ffffff',
+            accent: '#e57600',
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['Epilogue', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #131313;
+      color: #e2e2e2;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 25%, #c5a028 50%, #d4af37 75%, #f3e5ab 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .anim-fade-down { animation: fadeInDown 0.6s ease forwards; }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Film canister menu */
+    #film-wrapper {
+      position: fixed;
+      top: clamp(50px, 6vw, 80px); right: 0;
+      width: clamp(80px, 20vw, 200px);
+      height: calc(100vh - clamp(50px, 6vw, 80px));
+      height: calc(100svh - clamp(50px, 6vw, 80px));
+      z-index: 80;
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 2.8s cubic-bezier(0.23, 1, 0.32, 1);
+      pointer-events: none; overflow: hidden;
+      background: #6c3e1d;
+    }
+    #film-wrapper.open { clip-path: inset(0 0 0% 0); }
+    #film-full-img { display: none; }
+    #film-wrapper::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; width: 18px; height: 100%;
+      background: repeating-linear-gradient(to bottom, #1a1a1a 0px, #1a1a1a 14px, transparent 14px, transparent 28px);
+      border-right: 8px solid #1a1a1a; z-index: 2; pointer-events: none;
+    }
+    .sprocket-right {
+      position: absolute; top: 0; right: 0; width: 18px; height: 100%;
+      background: repeating-linear-gradient(to bottom, #1a1a1a 0px, #1a1a1a 14px, transparent 14px, transparent 28px);
+      border-left: 8px solid #1a1a1a; z-index: 2; pointer-events: none;
+    }
+    .film-content {
+      position: absolute; inset: 0; left: 21px; right: 21px;
+      display: flex; flex-direction: column;
+      background: #7a3f18; box-shadow: inset 0 0 25px rgba(0,0,0,0.5); z-index: 1;
+    }
+    #menu-btn {
+      position: fixed; top: 0; right: 0;
+      width: clamp(80px, 20vw, 150px);
+      background: none; border: none; padding: 0; cursor: pointer; z-index: 70;
+      filter: drop-shadow(-4px 4px 18px rgba(0,0,0,0.85));
+      transition: transform 0.2s ease;
+    }
+    #menu-btn:hover { transform: scale(1.05); }
+    #menu-btn:active { transform: scale(0.97); }
+    #menu-btn img { width: 100%; height: auto; display: block; }
+    #menu-btn-inner { position: relative; display: block; }
+    .menu-icon {
+      position: absolute; top: 26%; left: 56%;
+      transform: translate(-50%, -50%); width: 24%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 13%; transition: opacity 0.2s ease, transform 0.25s ease; pointer-events: none;
+    }
+    .menu-icon svg { width: 100%; height: auto; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5)); }
+    #icon-hamburger { opacity: 1; }
+    #icon-close     { opacity: 0; transform: translate(-50%, -50%) rotate(-90deg) scale(0.7); }
+    body.menu-open #icon-hamburger { opacity: 0; transform: translate(-50%, -50%) rotate(90deg) scale(0.7); }
+    body.menu-open #icon-close     { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+    #film-nav {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      pointer-events: none; z-index: 5;
+    }
+    #film-wrapper.open #film-nav { pointer-events: auto; }
+    #film-nav a {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translateX(14px);
+      font-family: 'Epilogue', sans-serif;
+      font-size: clamp(0.75rem, 1.15vw, 1rem); font-weight: 900;
+      color: #f4e4c0; text-decoration: none;
+      text-transform: uppercase; letter-spacing: 0.22em;
+      transition: color 0.25s ease, text-shadow 0.25s ease;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      white-space: nowrap; pointer-events: auto;
+      border-bottom: 1px solid rgba(0,0,0,0.3);
+    }
+    #film-nav a:last-child { border-bottom: none; }
+    #film-nav a:nth-child(1) { background: url('Hamburger_home.jpg') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(2) { background: url('Hamburger_about.webp') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(3) { background: url('Hamburger_services.webp') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(4) { background: url('Hamburger_portfolio.avif') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(5) { background: url('Hamburger_quote.jpg') center / cover no-repeat; position: relative; overflow: hidden; }
+    #film-nav a:nth-child(1)::before,
+    #film-nav a:nth-child(2)::before,
+    #film-nav a:nth-child(3)::before,
+    #film-nav a:nth-child(4)::before,
+    #film-nav a:nth-child(5)::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(160deg, rgba(120,55,10,0.84) 0%, rgba(55,22,4,0.90) 100%);
+      transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1; pointer-events: none;
+    }
+    #film-nav a:nth-child(1):hover::before,
+    #film-nav a:nth-child(2):hover::before,
+    #film-nav a:nth-child(3):hover::before,
+    #film-nav a:nth-child(4):hover::before,
+    #film-nav a:nth-child(5):hover::before { opacity: 0.18; }
+    #film-nav a:nth-child(1)::after,
+    #film-nav a:nth-child(2)::after,
+    #film-nav a:nth-child(3)::after,
+    #film-nav a:nth-child(4)::after,
+    #film-nav a:nth-child(5)::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(to bottom, #111 0px, #111 13px, transparent 13px, transparent 27px),
+        repeating-linear-gradient(to bottom, #111 0px, #111 13px, transparent 13px, transparent 27px);
+      background-size: 16px 100%, 16px 100%;
+      background-position: left center, right center;
+      background-repeat: repeat-y, repeat-y;
+      pointer-events: none; z-index: 2;
+    }
+    .nav-label { position: relative; z-index: 3; }
+    #film-nav a:hover { color: #fff8e7; text-shadow: 0 0 16px rgba(255,220,150,0.8); }
+    #film-wrapper.open #film-nav a { animation: filmLinkIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    #film-wrapper.open #film-nav a:nth-child(1) { animation-delay: 0.48s; }
+    #film-wrapper.open #film-nav a:nth-child(2) { animation-delay: 0.60s; }
+    #film-wrapper.open #film-nav a:nth-child(3) { animation-delay: 0.72s; }
+    #film-wrapper.open #film-nav a:nth-child(4) { animation-delay: 0.84s; }
+    #film-wrapper.open #film-nav a:nth-child(5) { animation-delay: 0.96s; }
+    @keyframes filmLinkIn {
+      from { opacity: 0; transform: translateX(14px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    #backdrop {
+      pointer-events: none; opacity: 0;
+      transition: opacity 0.45s ease;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    #backdrop.open { pointer-events: auto; opacity: 1; }
+    body.menu-open { overflow: hidden; }
+    #header-inner { padding-left: clamp(8px, 4vw, 40px); padding-right: clamp(80px, 20vw, 150px); }
+
+    /* Page styles */
+    .divider-line { width: 60px; height: 1px; background: linear-gradient(to right, #d4af37, transparent); }
+
+    /* Filter tabs */
+    .filter-btn {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      padding: 8px 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: transparent; color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .filter-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .filter-btn.active { color: #d4af37; border-color: rgba(212,175,55,0.5); background: rgba(212,175,55,0.07); }
+
+    /* Portfolio grid */
+    .portfolio-card {
+      position: relative;
+      overflow: hidden;
+      background: #1a1a1a;
+      cursor: pointer;
+    }
+    .portfolio-card-img {
+      width: 100%; aspect-ratio: 16/10;
+      background: #222;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .portfolio-card:hover .portfolio-card-img { transform: scale(1.06); }
+    .portfolio-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+      transition: opacity 0.4s ease;
+    }
+    .portfolio-card-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 24px;
+      transform: translateY(8px);
+      transition: transform 0.4s ease;
+    }
+    .portfolio-card:hover .portfolio-card-info { transform: translateY(0); }
+    .play-btn-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.35s ease;
+    }
+    .portfolio-card:hover .play-btn-overlay { opacity: 1; }
+    .play-circle {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease;
+    }
+    .portfolio-card:hover .play-circle { transform: scale(1.1); }
+
+    /* Placeholder thumbnail patterns */
+    .thumb-pattern-1 { background: linear-gradient(135deg, #1c1008 0%, #2d1a04 50%, #1a0e00 100%); }
+    .thumb-pattern-2 { background: linear-gradient(135deg, #080d14 0%, #0f1a2d 50%, #060b14 100%); }
+    .thumb-pattern-3 { background: linear-gradient(135deg, #0d0d0d 0%, #1a1a0a 50%, #0a0a00 100%); }
+    .thumb-pattern-4 { background: linear-gradient(135deg, #100a14 0%, #1e1024 50%, #0a0610 100%); }
+    .thumb-pattern-5 { background: linear-gradient(135deg, #0a1410 0%, #122014 50%, #080e0a 100%); }
+    .thumb-pattern-6 { background: linear-gradient(135deg, #14080a 0%, #200a0e 50%, #100608 100%); }
+
+    /* Film frame number overlay on thumbnails */
+    .film-frame-num {
+      position: absolute; top: 12px; left: 12px;
+      font-family: 'Inter', monospace; font-size: 9px;
+      letter-spacing: 0.2em; color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    /* Video modal */
+    #video-modal {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #video-modal.open { opacity: 1; pointer-events: auto; }
+    #video-modal-inner {
+      position: relative;
+      width: 100%; max-width: min(900px, 95vw);
+      background: #0a0a0a;
+      border: 1px solid rgba(212,175,55,0.25);
+      border-radius: 6px; overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+      transform: scale(0.94);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #video-modal.open #video-modal-inner { transform: scale(1); }
+    #video-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: #111;
+    }
+    #video-modal-title {
+      font-family: 'Epilogue', sans-serif; font-size: 10px;
+      font-weight: 800; letter-spacing: 0.25em;
+      text-transform: uppercase; color: rgba(255,255,255,0.5);
+    }
+    #video-modal-close {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    #video-modal-close:hover { border-color: #d4af37; background: rgba(212,175,55,0.15); }
+
+    button { touch-action: manipulation; }
+    * { -webkit-tap-highlight-color: transparent; }
+    body { -webkit-text-size-adjust: 100%; }
+    a[aria-label="Follow us on Instagram"]:hover svg { stroke: #d4af37; transform: scale(1.1); }
+    @media (max-width: 767px) {
+      #film-wrapper { width: 55vw; max-width: 260px; }
+      #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ===== HEADER ===== -->
+  <header class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/10 h-28 md:h-40"
+          style="background-color:rgba(0,0,0,0.9);">
+    <div id="header-inner" class="h-full flex items-center justify-center">
+      <img
+        src="Garcia_Media_logo.PNG"
+        alt="Garcia Property Media"
+        class="h-4/5 w-auto max-w-full object-contain cursor-pointer anim-fade-down"
+        onclick="window.location.href='index.html'"
+      />
+    </div>
+  </header>
+
+  <div id="backdrop" class="fixed inset-0 z-40" onclick="closeMenu()"></div>
+
+  <button id="menu-btn" onclick="toggleMenu()" aria-label="Toggle navigation menu" aria-expanded="false">
+    <span id="menu-btn-inner">
+      <img src="Hamburger_film1.PNG" alt="Menu" />
+      <span id="icon-hamburger" class="menu-icon">
+        <svg viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect y="0"  width="40" height="5" rx="2.5" fill="#1a0e00"/>
+          <rect y="11" width="40" height="5" rx="2.5" fill="#1a0e00"/>
+          <rect y="23" width="40" height="5" rx="2.5" fill="#1a0e00"/>
+        </svg>
+      </span>
+      <span id="icon-close" class="menu-icon">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="2" y1="2" x2="34" y2="34" stroke="#1a0e00" stroke-width="5" stroke-linecap="round"/>
+          <line x1="34" y1="2" x2="2"  y2="34" stroke="#1a0e00" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </span>
+  </button>
+
+  <div id="film-wrapper">
+    <div class="sprocket-right"></div>
+    <div class="film-content"></div>
+    <img id="film-full-img" src="House_neg_filmroll.png" alt="" aria-hidden="true" />
+    <nav id="film-nav" aria-label="Site navigation">
+      <a href="index.html" onclick="closeMenu()"><span class="nav-label">Home</span></a>
+      <a href="about.html" onclick="closeMenu()"><span class="nav-label">About</span></a>
+      <a href="services.html" onclick="closeMenu()"><span class="nav-label">Services</span></a>
+      <a href="portfolio.html" onclick="closeMenu()"><span class="nav-label">Portfolio</span></a>
+      <a href="quote.html" onclick="closeMenu()"><span class="nav-label">Quote</span></a>
+    </nav>
+  </div>
+
+  <main class="flex-grow pt-28 md:pt-40">
+
+    <!-- ===== PAGE HERO ===== -->
+    <section class="relative overflow-hidden" style="min-height:55vh; display:flex; align-items:flex-end; background:#0a0a0a;">
+      <div class="absolute inset-0"
+           style="background:linear-gradient(160deg,#0a0a0a 0%,#140f00 60%,#0a0a0a 100%);"></div>
+      <div class="absolute inset-0 pointer-events-none"
+           style="background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);"></div>
+
+      <div class="relative z-10 w-full mx-auto px-6 md:px-16 pb-20 md:pb-28" style="max-width:1440px;">
+        <p class="uppercase mb-4" style="font-family:'Epilogue',sans-serif; font-size:11px; letter-spacing:0.35em; color:#d4af37;">Selected Works</p>
+        <h1 class="text-6xl md:text-9xl font-bold text-white"
+            style="font-family:'Cormorant Garamond',serif; font-weight:700; letter-spacing:-0.02em; line-height:0.88;">
+          The<br/><em>Reel</em>
+        </h1>
+        <div class="divider-line mt-10"></div>
+      </div>
+    </section>
+
+    <!-- ===== FILTER TABS ===== -->
+    <section style="background:#131313; padding:48px 0 0;">
+      <div class="mx-auto px-6 md:px-16 reveal" style="max-width:1440px;">
+        <div class="flex gap-2 flex-wrap">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="residential">Residential</button>
+          <button class="filter-btn" data-filter="luxury">Luxury</button>
+          <button class="filter-btn" data-filter="commercial">Commercial</button>
+          <button class="filter-btn" data-filter="social">Social Media</button>
+        </div>
+        <div class="mt-6 w-full" style="height:1px; background:rgba(255,255,255,0.07);"></div>
+      </div>
+    </section>
+
+    <!-- ===== PORTFOLIO GRID ===== -->
+    <section style="background:#131313; padding:48px 0 120px;">
+      <div class="mx-auto px-6 md:px-16" style="max-width:1440px;">
+
+        <!-- Featured wide card -->
+        <div class="portfolio-card reveal mb-3" data-category="luxury"
+             onclick="openVideoModal('Marketing sample 1.mov','Featured — Luxury Estate | Houston, TX')">
+          <div class="portfolio-card-img thumb-pattern-1" style="aspect-ratio:21/9;">
+            <span class="film-frame-num">GPM&nbsp;&nbsp;001&nbsp;&nbsp;&#x25A1;</span>
+            <!-- Film grain overlay -->
+            <div style="position:absolute;inset:0;opacity:0.04;background-image:url('data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.75\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E');background-size:200px;"></div>
+            <div style="text-align:center; position:relative; z-index:2;">
+              <p class="gold-gradient-text" style="font-family:'Epilogue',sans-serif; font-size:clamp(1.5rem,4vw,3.5rem); font-weight:800; letter-spacing:0.1em; opacity:0.4;">FEATURED PROPERTY</p>
+              <p style="font-family:'Inter',monospace; font-size:11px; letter-spacing:0.3em; color:rgba(255,255,255,0.2); margin-top:8px;">LUXURY ESTATE &mdash; HOUSTON, TX</p>
+            </div>
+          </div>
+          <div class="portfolio-card-overlay"></div>
+          <div class="play-btn-overlay">
+            <div class="play-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#111" style="margin-left:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </div>
+          <div class="portfolio-card-info">
+            <p style="font-family:'Inter',monospace; font-size:9px; letter-spacing:0.25em; color:rgba(212,175,55,0.7); margin-bottom:6px;">LUXURY &nbsp;&#x2014;&nbsp; 2024</p>
+            <h3 class="text-xl font-bold text-white" style="font-family:'Epilogue',sans-serif; letter-spacing:0.05em;">Luxury Estate — Houston, TX</h3>
+            <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">Full cinematic walkthrough &bull; 4K &bull; 2:45</p>
+          </div>
+        </div>
+
+        <!-- 3-column grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+          <div class="portfolio-card reveal" data-category="residential"
+               onclick="openVideoModal('Marketing sample 1.mov','Residential — Modern Craftsman | Katy, TX')">
+            <div class="portfolio-card-img thumb-pattern-2">
+              <span class="film-frame-num">GPM&nbsp;&nbsp;002&nbsp;&nbsp;&#x25A1;</span>
+              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
+                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">RESIDENTIAL</p>
+              </div>
+            </div>
+            <div class="portfolio-card-overlay"></div>
+            <div class="play-btn-overlay">
+              <div class="play-circle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+            <div class="portfolio-card-info">
+              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">RESIDENTIAL &nbsp;&#x2014;&nbsp; 2024</p>
+              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Modern Craftsman — Katy, TX</h3>
+              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Social reel &bull; 4K &bull; 0:58</p>
+            </div>
+          </div>
+
+          <div class="portfolio-card reveal" data-category="luxury"
+               onclick="openVideoModal('Marketing sample 1.mov','Luxury — High-Rise Penthouse | Houston Heights')">
+            <div class="portfolio-card-img thumb-pattern-4">
+              <span class="film-frame-num">GPM&nbsp;&nbsp;003&nbsp;&nbsp;&#x25A1;</span>
+              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
+                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">LUXURY</p>
+              </div>
+            </div>
+            <div class="portfolio-card-overlay"></div>
+            <div class="play-btn-overlay">
+              <div class="play-circle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+            <div class="portfolio-card-info">
+              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">LUXURY &nbsp;&#x2014;&nbsp; 2024</p>
+              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">High-Rise Penthouse — Houston Heights</h3>
+              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Full tour &bull; 4K &bull; 2:12</p>
+            </div>
+          </div>
+
+          <div class="portfolio-card reveal" data-category="social"
+               onclick="openVideoModal('Marketing sample 1.mov','Social Reel — Suburban Home | Sugar Land, TX')">
+            <div class="portfolio-card-img thumb-pattern-3">
+              <span class="film-frame-num">GPM&nbsp;&nbsp;004&nbsp;&nbsp;&#x25A1;</span>
+              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
+                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">SOCIAL REEL</p>
+              </div>
+            </div>
+            <div class="portfolio-card-overlay"></div>
+            <div class="play-btn-overlay">
+              <div class="play-circle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+            <div class="portfolio-card-info">
+              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">SOCIAL &nbsp;&#x2014;&nbsp; 2025</p>
+              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Suburban Home — Sugar Land, TX</h3>
+              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Vertical reel &bull; 4K &bull; 0:42</p>
+            </div>
+          </div>
+
+          <div class="portfolio-card reveal" data-category="commercial"
+               onclick="openVideoModal('Marketing sample 1.mov','Commercial — Office Campus | The Woodlands')">
+            <div class="portfolio-card-img thumb-pattern-5">
+              <span class="film-frame-num">GPM&nbsp;&nbsp;005&nbsp;&nbsp;&#x25A1;</span>
+              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
+                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">COMMERCIAL</p>
+              </div>
+            </div>
+            <div class="portfolio-card-overlay"></div>
+            <div class="play-btn-overlay">
+              <div class="play-circle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+            <div class="portfolio-card-info">
+              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">COMMERCIAL &nbsp;&#x2014;&nbsp; 2025</p>
+              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Office Campus — The Woodlands</h3>
+              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Listing highlight &bull; 4K &bull; 1:20</p>
+            </div>
+          </div>
+
+          <div class="portfolio-card reveal" data-category="residential"
+               onclick="openVideoModal('Marketing sample 1.mov','Residential — Classic Bungalow | Montrose, TX')">
+            <div class="portfolio-card-img thumb-pattern-6">
+              <span class="film-frame-num">GPM&nbsp;&nbsp;006&nbsp;&nbsp;&#x25A1;</span>
+              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
+                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">RESIDENTIAL</p>
+              </div>
+            </div>
+            <div class="portfolio-card-overlay"></div>
+            <div class="play-btn-overlay">
+              <div class="play-circle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+            <div class="portfolio-card-info">
+              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">RESIDENTIAL &nbsp;&#x2014;&nbsp; 2025</p>
+              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Classic Bungalow — Montrose, TX</h3>
+              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Full tour &bull; 4K &bull; 1:55</p>
+            </div>
+          </div>
+
+          <div class="portfolio-card reveal" data-category="luxury"
+               onclick="openVideoModal('Marketing sample 1.mov','Luxury — Gated Estate | Bellaire, TX')">
+            <div class="portfolio-card-img thumb-pattern-1">
+              <span class="film-frame-num">GPM&nbsp;&nbsp;007&nbsp;&nbsp;&#x25A1;</span>
+              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
+                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">LUXURY</p>
+              </div>
+            </div>
+            <div class="portfolio-card-overlay"></div>
+            <div class="play-btn-overlay">
+              <div class="play-circle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+            </div>
+            <div class="portfolio-card-info">
+              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">LUXURY &nbsp;&#x2014;&nbsp; 2025</p>
+              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Gated Estate — Bellaire, TX</h3>
+              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Full campaign &bull; 4K &bull; 3:10</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section style="padding:80px 0 120px; background-color:#0d0d0d; border-top:1px solid rgba(255,255,255,0.06);">
+      <div class="mx-auto px-6 md:px-16 flex flex-col md:flex-row items-center justify-between gap-10 reveal" style="max-width:1440px;">
+        <div>
+          <p class="uppercase mb-3" style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:#d4af37;">Your Property Next</p>
+          <h2 class="text-3xl md:text-5xl font-bold text-white italic" style="font-family:'Cormorant Garamond',serif; font-weight:600;">
+            Ready to see your listing here?
+          </h2>
+        </div>
+        <a href="quote.html"
+           class="flex-shrink-0 inline-block px-10 py-4 font-bold uppercase tracking-widest text-xs transition-all duration-300"
+           style="font-family:'Epilogue',sans-serif; letter-spacing:0.3em; background:linear-gradient(135deg,#d4af37,#c5a028); color:#000; white-space:nowrap;">
+          Request a Quote
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="w-full border-t" style="background-color:#000; border-color:rgba(255,255,255,0.08);">
+    <div class="mx-auto px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-0" style="max-width:1920px;">
+      <div class="flex flex-col items-center md:items-end md:order-2 pb-10 md:pb-0">
+        <p class="uppercase mb-4" style="font-family:'Epilogue',sans-serif; font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Follow Us On</p>
+        <a href="https://www.instagram.com/garciapropertymedia/" target="_blank" rel="noopener noreferrer"
+           aria-label="Follow us on Instagram" class="group">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+               fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+               style="transition: stroke 0.3s ease, transform 0.3s ease;">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.5" fill="rgba(255,255,255,0.35)" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+      <div class="block md:hidden w-full border-t mb-10" style="border-color:rgba(255,255,255,0.08);"></div>
+      <div class="flex flex-col items-center md:items-start md:order-1 gap-3 text-center md:text-left">
+        <p class="text-white uppercase font-bold" style="font-family:'Epilogue',sans-serif; font-size:13px; letter-spacing:0.18em;">Premium Studio Cinema</p>
+        <p class="uppercase" style="font-family:'Epilogue',sans-serif; font-size:9px; letter-spacing:0.25em; color:rgba(255,255,255,0.25); line-height:1.8;">
+          &copy; 2026 Garcia Property Studio. All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Video modal -->
+  <div id="video-modal" role="dialog" aria-modal="true" aria-label="Portfolio Video"
+       onclick="if(event.target===this)closeVideoModal()">
+    <div id="video-modal-inner">
+      <div id="video-modal-header">
+        <span id="video-modal-title">Portfolio Video</span>
+        <button id="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <video id="video-modal-vid" controls playsinline preload="none"
+             style="width:100%;display:block;aspect-ratio:16/9;background:#000;"></video>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const wrapper  = document.getElementById('film-wrapper');
+      const backdrop = document.getElementById('backdrop');
+      const btn      = document.getElementById('menu-btn');
+      const isOpen   = wrapper.classList.toggle('open');
+      backdrop.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+    function closeMenu() {
+      document.getElementById('film-wrapper').classList.remove('open');
+      document.getElementById('backdrop').classList.remove('open');
+      document.body.classList.remove('menu-open');
+      document.getElementById('menu-btn').setAttribute('aria-expanded', 'false');
+    }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeMenu(); closeVideoModal(); } });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Filter tabs
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.portfolio-card').forEach(function(card) {
+          if (filter === 'all' || card.getAttribute('data-category') === filter) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Video modal
+    function openVideoModal(src, title) {
+      var modal = document.getElementById('video-modal');
+      var vid   = document.getElementById('video-modal-vid');
+      var ttl   = document.getElementById('video-modal-title');
+      vid.pause();
+      vid.src = src;
+      ttl.textContent = title;
+      modal.setAttribute('aria-label', title);
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      vid.load();
+      vid.play().catch(function(){});
+    }
+    function closeVideoModal() {
+      var modal = document.getElementById('video-modal');
+      var vid   = document.getElementById('video-modal-vid');
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      vid.pause();
+      vid.currentTime = 0;
+    }
+  </script>
+</body>
+</html>
