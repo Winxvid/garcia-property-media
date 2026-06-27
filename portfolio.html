@@ -182,120 +182,32 @@
     /* Page styles */
     .divider-line { width: 60px; height: 1px; background: linear-gradient(to right, #d4af37, transparent); }
 
-    /* Filter tabs */
-    .filter-btn {
-      font-family: 'Epilogue', sans-serif;
-      font-size: 10px; font-weight: 800;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      padding: 8px 18px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: transparent; color: rgba(255,255,255,0.4);
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-    .filter-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
-    .filter-btn.active { color: #d4af37; border-color: rgba(212,175,55,0.5); background: rgba(212,175,55,0.07); }
-
-    /* Portfolio grid */
-    .portfolio-card {
+    /* Coming soon cards */
+    .coming-soon-card {
       position: relative;
+      aspect-ratio: 16/10;
+      border: 1px solid rgba(212,175,55,0.18);
+      background: linear-gradient(160deg, #191919 0%, #111 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
-      background: #1a1a1a;
-      cursor: pointer;
+      transition: border-color 0.45s ease, background 0.45s ease;
     }
-    .portfolio-card-img {
-      width: 100%; aspect-ratio: 16/10;
-      background: #222;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    .coming-soon-card:hover {
+      border-color: rgba(212,175,55,0.45);
+      background: linear-gradient(160deg, #1e1e18 0%, #141410 100%);
     }
-    .portfolio-card:hover .portfolio-card-img { transform: scale(1.06); }
-    .portfolio-card-overlay {
+    .coming-soon-card::before {
+      content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
-      transition: opacity 0.4s ease;
-    }
-    .portfolio-card-info {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 20px 24px;
-      transform: translateY(8px);
-      transition: transform 0.4s ease;
-    }
-    .portfolio-card:hover .portfolio-card-info { transform: translateY(0); }
-    .play-btn-overlay {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.35s ease;
-    }
-    .portfolio-card:hover .play-btn-overlay { opacity: 1; }
-    .play-circle {
-      width: 56px; height: 56px; border-radius: 50%;
-      background: rgba(255,255,255,0.9);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-      transition: transform 0.2s ease;
-    }
-    .portfolio-card:hover .play-circle { transform: scale(1.1); }
-
-    /* Placeholder thumbnail patterns */
-    .thumb-pattern-1 { background: linear-gradient(135deg, #1c1008 0%, #2d1a04 50%, #1a0e00 100%); }
-    .thumb-pattern-2 { background: linear-gradient(135deg, #080d14 0%, #0f1a2d 50%, #060b14 100%); }
-    .thumb-pattern-3 { background: linear-gradient(135deg, #0d0d0d 0%, #1a1a0a 50%, #0a0a00 100%); }
-    .thumb-pattern-4 { background: linear-gradient(135deg, #100a14 0%, #1e1024 50%, #0a0610 100%); }
-    .thumb-pattern-5 { background: linear-gradient(135deg, #0a1410 0%, #122014 50%, #080e0a 100%); }
-    .thumb-pattern-6 { background: linear-gradient(135deg, #14080a 0%, #200a0e 50%, #100608 100%); }
-
-    /* Film frame number overlay on thumbnails */
-    .film-frame-num {
-      position: absolute; top: 12px; left: 12px;
-      font-family: 'Inter', monospace; font-size: 9px;
-      letter-spacing: 0.2em; color: rgba(255,255,255,0.2);
-      text-transform: uppercase;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+      );
       pointer-events: none;
     }
-
-    /* Video modal */
-    #video-modal {
-      position: fixed; inset: 0; z-index: 200;
-      display: flex; align-items: center; justify-content: center;
-      padding: 16px;
-      background: rgba(0,0,0,0.88);
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    #video-modal.open { opacity: 1; pointer-events: auto; }
-    #video-modal-inner {
-      position: relative;
-      width: 100%; max-width: min(900px, 95vw);
-      background: #0a0a0a;
-      border: 1px solid rgba(212,175,55,0.25);
-      border-radius: 6px; overflow: hidden;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
-      transform: scale(0.94);
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    #video-modal.open #video-modal-inner { transform: scale(1); }
-    #video-modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      background: #111;
-    }
-    #video-modal-title {
-      font-family: 'Epilogue', sans-serif; font-size: 10px;
-      font-weight: 800; letter-spacing: 0.25em;
-      text-transform: uppercase; color: rgba(255,255,255,0.5);
-    }
-    #video-modal-close {
-      width: 28px; height: 28px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-    #video-modal-close:hover { border-color: #d4af37; background: rgba(212,175,55,0.15); }
 
     button { touch-action: manipulation; }
     * { -webkit-tap-highlight-color: transparent; }
@@ -304,20 +216,12 @@
     @media (max-width: 767px) {
       #film-wrapper { width: 55vw; max-width: 260px; }
       #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
-      /* Reduce hero height */
       main > section:first-child { min-height: 42vh !important; }
-      /* Section padding reductions */
-      main section[style*="padding:48px 0 120px"] { padding-bottom: 72px !important; }
       main section[style*="padding:80px 0 120px"] {
         padding-top: 48px !important;
         padding-bottom: 72px !important;
       }
-      /* Featured card aspect ratio — less extreme on mobile */
-      .portfolio-card-img[style*="21/9"] { aspect-ratio: 16/9 !important; }
-      /* Filter tabs wrap nicely */
-      .filter-btn { padding: 8px 12px; font-size: 9px; }
-      /* Portfolio card info always visible on touch */
-      .portfolio-card-info { transform: translateY(0) !important; }
+      .coming-soon-card { aspect-ratio: 4/3; }
     }
   </style>
 </head>
@@ -394,175 +298,46 @@
       </div>
     </section>
 
-    <!-- ===== FILTER TABS ===== -->
-    <section style="background:#131313; padding:48px 0 0;">
-      <div class="mx-auto px-6 md:px-16 reveal" style="max-width:1440px;">
-        <div class="flex gap-2 flex-wrap">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="residential">Residential</button>
-          <button class="filter-btn" data-filter="luxury">Luxury</button>
-          <button class="filter-btn" data-filter="commercial">Commercial</button>
-          <button class="filter-btn" data-filter="social">Social Media</button>
-        </div>
-        <div class="mt-6 w-full" style="height:1px; background:rgba(255,255,255,0.07);"></div>
-      </div>
-    </section>
-
     <!-- ===== PORTFOLIO GRID ===== -->
-    <section style="background:#131313; padding:48px 0 120px;">
+    <section style="background:#131313; padding:72px 0 120px;">
       <div class="mx-auto px-6 md:px-16" style="max-width:1440px;">
 
-        <!-- Featured wide card -->
-        <div class="portfolio-card reveal mb-3" data-category="luxury"
-             onclick="openVideoModal('Marketing sample 1.mov','Featured — Luxury Estate | Corpus Christi, TX')">
-          <div class="portfolio-card-img thumb-pattern-1" style="aspect-ratio:21/9;">
-            <span class="film-frame-num">GPM&nbsp;&nbsp;001&nbsp;&nbsp;&#x25A1;</span>
-            <!-- Film grain overlay -->
-            <div style="position:absolute;inset:0;opacity:0.04;background-image:url('data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.75\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E');background-size:200px;"></div>
-            <div style="text-align:center; position:relative; z-index:2;">
-              <p class="gold-gradient-text" style="font-family:'Epilogue',sans-serif; font-size:clamp(1.5rem,4vw,3.5rem); font-weight:800; letter-spacing:0.1em; opacity:0.4;">FEATURED PROPERTY</p>
-              <p style="font-family:'Inter',monospace; font-size:11px; letter-spacing:0.3em; color:rgba(255,255,255,0.2); margin-top:8px;">LUXURY ESTATE &mdash; CORPUS CHRISTI, TX</p>
-            </div>
-          </div>
-          <div class="portfolio-card-overlay"></div>
-          <div class="play-btn-overlay">
-            <div class="play-circle">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#111" style="margin-left:3px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            </div>
-          </div>
-          <div class="portfolio-card-info">
-            <p style="font-family:'Inter',monospace; font-size:9px; letter-spacing:0.25em; color:rgba(212,175,55,0.7); margin-bottom:6px;">LUXURY &nbsp;&#x2014;&nbsp; 2024</p>
-            <h3 class="text-xl font-bold text-white" style="font-family:'Epilogue',sans-serif; letter-spacing:0.05em;">Luxury Estate — Corpus Christi, TX</h3>
-            <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">Full cinematic walkthrough &bull; 4K &bull; 2:45</p>
-          </div>
+        <div class="text-center mb-16 reveal">
+          <p class="uppercase" style="font-family:'Epilogue',sans-serif; font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.3);">Work in Progress</p>
         </div>
 
-        <!-- 3-column grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-          <div class="portfolio-card reveal" data-category="residential"
-               onclick="openVideoModal('Marketing sample 1.mov','Residential — Modern Craftsman | Katy, TX')">
-            <div class="portfolio-card-img thumb-pattern-2">
-              <span class="film-frame-num">GPM&nbsp;&nbsp;002&nbsp;&nbsp;&#x25A1;</span>
-              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
-                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">RESIDENTIAL</p>
-              </div>
-            </div>
-            <div class="portfolio-card-overlay"></div>
-            <div class="play-btn-overlay">
-              <div class="play-circle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-            </div>
-            <div class="portfolio-card-info">
-              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">RESIDENTIAL &nbsp;&#x2014;&nbsp; 2024</p>
-              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Modern Craftsman — Katy, TX</h3>
-              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Social reel &bull; 4K &bull; 0:58</p>
+          <!-- Card 1 -->
+          <div class="coming-soon-card reveal">
+            <p style="font-family:'Inter',monospace; font-size:9px; letter-spacing:0.25em; color:rgba(212,175,55,0.35); position:absolute; top:20px; left:20px;">GPM &nbsp; 001 &nbsp; &#x25A1;</p>
+            <div style="text-align:center; position:relative; z-index:1;">
+              <div style="width:32px; height:1px; background:rgba(212,175,55,0.45); margin:0 auto 24px;"></div>
+              <p style="font-family:'Epilogue',sans-serif; font-size:11px; font-weight:800; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:10px;">Coming Soon</p>
+              <p style="font-family:'Inter',sans-serif; font-size:11px; letter-spacing:0.08em; color:rgba(255,255,255,0.28);">Work in progress</p>
+              <div style="width:32px; height:1px; background:rgba(212,175,55,0.45); margin:24px auto 0;"></div>
             </div>
           </div>
 
-          <div class="portfolio-card reveal" data-category="luxury"
-               onclick="openVideoModal('Marketing sample 1.mov','Luxury — High-Rise Penthouse | Corpus Christi')">
-            <div class="portfolio-card-img thumb-pattern-4">
-              <span class="film-frame-num">GPM&nbsp;&nbsp;003&nbsp;&nbsp;&#x25A1;</span>
-              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
-                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">LUXURY</p>
-              </div>
-            </div>
-            <div class="portfolio-card-overlay"></div>
-            <div class="play-btn-overlay">
-              <div class="play-circle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-            </div>
-            <div class="portfolio-card-info">
-              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">LUXURY &nbsp;&#x2014;&nbsp; 2024</p>
-              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">High-Rise Penthouse — Corpus Christi</h3>
-              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Full tour &bull; 4K &bull; 2:12</p>
+          <!-- Card 2 -->
+          <div class="coming-soon-card reveal" style="transition-delay:0.15s;">
+            <p style="font-family:'Inter',monospace; font-size:9px; letter-spacing:0.25em; color:rgba(212,175,55,0.35); position:absolute; top:20px; left:20px;">GPM &nbsp; 002 &nbsp; &#x25A1;</p>
+            <div style="text-align:center; position:relative; z-index:1;">
+              <div style="width:32px; height:1px; background:rgba(212,175,55,0.45); margin:0 auto 24px;"></div>
+              <p style="font-family:'Epilogue',sans-serif; font-size:11px; font-weight:800; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:10px;">Coming Soon</p>
+              <p style="font-family:'Inter',sans-serif; font-size:11px; letter-spacing:0.08em; color:rgba(255,255,255,0.28);">Work in progress</p>
+              <div style="width:32px; height:1px; background:rgba(212,175,55,0.45); margin:24px auto 0;"></div>
             </div>
           </div>
 
-          <div class="portfolio-card reveal" data-category="social"
-               onclick="openVideoModal('Marketing sample 1.mov','Social Reel — Suburban Home | Sugar Land, TX')">
-            <div class="portfolio-card-img thumb-pattern-3">
-              <span class="film-frame-num">GPM&nbsp;&nbsp;004&nbsp;&nbsp;&#x25A1;</span>
-              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
-                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">SOCIAL REEL</p>
-              </div>
-            </div>
-            <div class="portfolio-card-overlay"></div>
-            <div class="play-btn-overlay">
-              <div class="play-circle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-            </div>
-            <div class="portfolio-card-info">
-              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">SOCIAL &nbsp;&#x2014;&nbsp; 2025</p>
-              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Suburban Home — Sugar Land, TX</h3>
-              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Vertical reel &bull; 4K &bull; 0:42</p>
-            </div>
-          </div>
-
-          <div class="portfolio-card reveal" data-category="commercial"
-               onclick="openVideoModal('Marketing sample 1.mov','Commercial — Office Campus | The Woodlands')">
-            <div class="portfolio-card-img thumb-pattern-5">
-              <span class="film-frame-num">GPM&nbsp;&nbsp;005&nbsp;&nbsp;&#x25A1;</span>
-              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
-                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">COMMERCIAL</p>
-              </div>
-            </div>
-            <div class="portfolio-card-overlay"></div>
-            <div class="play-btn-overlay">
-              <div class="play-circle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-            </div>
-            <div class="portfolio-card-info">
-              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">COMMERCIAL &nbsp;&#x2014;&nbsp; 2025</p>
-              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Office Campus — The Woodlands</h3>
-              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Listing highlight &bull; 4K &bull; 1:20</p>
-            </div>
-          </div>
-
-          <div class="portfolio-card reveal" data-category="residential"
-               onclick="openVideoModal('Marketing sample 1.mov','Residential — Classic Bungalow | Montrose, TX')">
-            <div class="portfolio-card-img thumb-pattern-6">
-              <span class="film-frame-num">GPM&nbsp;&nbsp;006&nbsp;&nbsp;&#x25A1;</span>
-              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
-                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">RESIDENTIAL</p>
-              </div>
-            </div>
-            <div class="portfolio-card-overlay"></div>
-            <div class="play-btn-overlay">
-              <div class="play-circle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-            </div>
-            <div class="portfolio-card-info">
-              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">RESIDENTIAL &nbsp;&#x2014;&nbsp; 2025</p>
-              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Classic Bungalow — Montrose, TX</h3>
-              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Full tour &bull; 4K &bull; 1:55</p>
-            </div>
-          </div>
-
-          <div class="portfolio-card reveal" data-category="luxury"
-               onclick="openVideoModal('Marketing sample 1.mov','Luxury — Gated Estate | Bellaire, TX')">
-            <div class="portfolio-card-img thumb-pattern-1">
-              <span class="film-frame-num">GPM&nbsp;&nbsp;007&nbsp;&nbsp;&#x25A1;</span>
-              <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
-                <p style="font-family:'Epilogue',sans-serif; font-size:1rem; font-weight:800; letter-spacing:0.15em; color:#e2e2e2;">LUXURY</p>
-              </div>
-            </div>
-            <div class="portfolio-card-overlay"></div>
-            <div class="play-btn-overlay">
-              <div class="play-circle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#111" style="margin-left:2px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-            </div>
-            <div class="portfolio-card-info">
-              <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">LUXURY &nbsp;&#x2014;&nbsp; 2025</p>
-              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">Gated Estate — Bellaire, TX</h3>
-              <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Full campaign &bull; 4K &bull; 3:10</p>
+          <!-- Card 3 -->
+          <div class="coming-soon-card reveal" style="transition-delay:0.30s;">
+            <p style="font-family:'Inter',monospace; font-size:9px; letter-spacing:0.25em; color:rgba(212,175,55,0.35); position:absolute; top:20px; left:20px;">GPM &nbsp; 003 &nbsp; &#x25A1;</p>
+            <div style="text-align:center; position:relative; z-index:1;">
+              <div style="width:32px; height:1px; background:rgba(212,175,55,0.45); margin:0 auto 24px;"></div>
+              <p style="font-family:'Epilogue',sans-serif; font-size:11px; font-weight:800; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:10px;">Coming Soon</p>
+              <p style="font-family:'Inter',sans-serif; font-size:11px; letter-spacing:0.08em; color:rgba(255,255,255,0.28);">Work in progress</p>
+              <div style="width:32px; height:1px; background:rgba(212,175,55,0.45); margin:24px auto 0;"></div>
             </div>
           </div>
 
@@ -615,23 +390,6 @@
     </div>
   </footer>
 
-  <!-- Video modal -->
-  <div id="video-modal" role="dialog" aria-modal="true" aria-label="Portfolio Video"
-       onclick="if(event.target===this)closeVideoModal()">
-    <div id="video-modal-inner">
-      <div id="video-modal-header">
-        <span id="video-modal-title">Portfolio Video</span>
-        <button id="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-      <video id="video-modal-vid" controls playsinline preload="none"
-             style="width:100%;display:block;aspect-ratio:16/9;background:#000;"></video>
-    </div>
-  </div>
-
   <script>
     function toggleMenu() {
       const wrapper  = document.getElementById('film-wrapper');
@@ -648,7 +406,7 @@
       document.body.classList.remove('menu-open');
       document.getElementById('menu-btn').setAttribute('aria-expanded', 'false');
     }
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeMenu(); closeVideoModal(); } });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -656,45 +414,6 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // Filter tabs
-    document.querySelectorAll('.filter-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const filter = btn.getAttribute('data-filter');
-        document.querySelectorAll('.portfolio-card').forEach(function(card) {
-          if (filter === 'all' || card.getAttribute('data-category') === filter) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-
-    // Video modal
-    function openVideoModal(src, title) {
-      var modal = document.getElementById('video-modal');
-      var vid   = document.getElementById('video-modal-vid');
-      var ttl   = document.getElementById('video-modal-title');
-      vid.pause();
-      vid.src = src;
-      ttl.textContent = title;
-      modal.setAttribute('aria-label', title);
-      modal.classList.add('open');
-      document.body.style.overflow = 'hidden';
-      vid.load();
-      vid.play().catch(function(){});
-    }
-    function closeVideoModal() {
-      var modal = document.getElementById('video-modal');
-      var vid   = document.getElementById('video-modal-vid');
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-      vid.pause();
-      vid.currentTime = 0;
-    }
   </script>
 </body>
 </html>
