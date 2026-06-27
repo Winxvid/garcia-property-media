@@ -263,6 +263,21 @@
     @media (max-width: 767px) {
       #film-wrapper { width: 55vw; max-width: 260px; }
       #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
+      /* Reduce hero height on mobile */
+      .page-hero { min-height: 45vh !important; }
+      /* Reduce large section paddings */
+      main section[style*="padding:120px 0"],
+      main section[style*="padding:100px 0"] {
+        padding-top: 60px !important;
+        padding-bottom: 60px !important;
+      }
+      /* Stat cards: shrink padding so 3-col fits */
+      .stat-card { padding: 20px 10px !important; }
+      .stat-card .text-4xl { font-size: 1.75rem !important; }
+      /* Value cards */
+      .value-card { padding: 28px 20px !important; }
+      /* Story section grid gap */
+      .grid.grid-cols-12 { gap: 40px !important; }
     }
   </style>
 </head>
@@ -372,7 +387,7 @@
                 </p>
                 <footer>
                   <p class="uppercase font-bold" style="font-family:'Epilogue',sans-serif; font-size:11px; letter-spacing:0.25em; color:#d4af37;">Garcia Property Media</p>
-                  <p style="font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:0.1em; margin-top:4px;">FOUNDED IN HOUSTON, TX</p>
+                  <p style="font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:0.1em; margin-top:4px;">FOUNDED IN CORPUS CHRISTI, TX</p>
                 </footer>
               </blockquote>
             </div>

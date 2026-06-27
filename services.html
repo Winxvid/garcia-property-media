@@ -247,6 +247,30 @@
     @media (max-width: 767px) {
       #film-wrapper { width: 55vw; max-width: 260px; }
       #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
+      /* Reduce hero height */
+      main > section:first-child { min-height: 42vh !important; }
+      /* Section padding reductions */
+      main section[style*="padding:100px 0"],
+      main section[style*="padding:120px 0"] {
+        padding-top: 60px !important;
+        padding-bottom: 60px !important;
+      }
+      /* Fix service rows on mobile — remove desktop right-border & excess padding */
+      .service-row { grid-template-columns: 1fr !important; }
+      .service-row > div:first-child {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+        padding: 32px 16px !important;
+      }
+      .service-row > div:last-child {
+        padding: 24px 16px 36px !important;
+      }
+      /* Service list container padding */
+      [style*="padding:0 24px 0 40px"] {
+        padding: 0 16px !important;
+      }
+      /* Package cards */
+      .package-card { padding: 28px 20px !important; }
     }
   </style>
 </head>

@@ -304,6 +304,20 @@
     @media (max-width: 767px) {
       #film-wrapper { width: 55vw; max-width: 260px; }
       #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
+      /* Reduce hero height */
+      main > section:first-child { min-height: 42vh !important; }
+      /* Section padding reductions */
+      main section[style*="padding:48px 0 120px"] { padding-bottom: 72px !important; }
+      main section[style*="padding:80px 0 120px"] {
+        padding-top: 48px !important;
+        padding-bottom: 72px !important;
+      }
+      /* Featured card aspect ratio — less extreme on mobile */
+      .portfolio-card-img[style*="21/9"] { aspect-ratio: 16/9 !important; }
+      /* Filter tabs wrap nicely */
+      .filter-btn { padding: 8px 12px; font-size: 9px; }
+      /* Portfolio card info always visible on touch */
+      .portfolio-card-info { transform: translateY(0) !important; }
     }
   </style>
 </head>
@@ -395,14 +409,14 @@
 
         <!-- Featured wide card -->
         <div class="portfolio-card reveal mb-3" data-category="luxury"
-             onclick="openVideoModal('Marketing sample 1.mov','Featured — Luxury Estate | Houston, TX')">
+             onclick="openVideoModal('Marketing sample 1.mov','Featured — Luxury Estate | Corpus Christi, TX')">
           <div class="portfolio-card-img thumb-pattern-1" style="aspect-ratio:21/9;">
             <span class="film-frame-num">GPM&nbsp;&nbsp;001&nbsp;&nbsp;&#x25A1;</span>
             <!-- Film grain overlay -->
             <div style="position:absolute;inset:0;opacity:0.04;background-image:url('data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.75\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E');background-size:200px;"></div>
             <div style="text-align:center; position:relative; z-index:2;">
               <p class="gold-gradient-text" style="font-family:'Epilogue',sans-serif; font-size:clamp(1.5rem,4vw,3.5rem); font-weight:800; letter-spacing:0.1em; opacity:0.4;">FEATURED PROPERTY</p>
-              <p style="font-family:'Inter',monospace; font-size:11px; letter-spacing:0.3em; color:rgba(255,255,255,0.2); margin-top:8px;">LUXURY ESTATE &mdash; HOUSTON, TX</p>
+              <p style="font-family:'Inter',monospace; font-size:11px; letter-spacing:0.3em; color:rgba(255,255,255,0.2); margin-top:8px;">LUXURY ESTATE &mdash; CORPUS CHRISTI, TX</p>
             </div>
           </div>
           <div class="portfolio-card-overlay"></div>
@@ -413,7 +427,7 @@
           </div>
           <div class="portfolio-card-info">
             <p style="font-family:'Inter',monospace; font-size:9px; letter-spacing:0.25em; color:rgba(212,175,55,0.7); margin-bottom:6px;">LUXURY &nbsp;&#x2014;&nbsp; 2024</p>
-            <h3 class="text-xl font-bold text-white" style="font-family:'Epilogue',sans-serif; letter-spacing:0.05em;">Luxury Estate — Houston, TX</h3>
+            <h3 class="text-xl font-bold text-white" style="font-family:'Epilogue',sans-serif; letter-spacing:0.05em;">Luxury Estate — Corpus Christi, TX</h3>
             <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:4px;">Full cinematic walkthrough &bull; 4K &bull; 2:45</p>
           </div>
         </div>
@@ -443,7 +457,7 @@
           </div>
 
           <div class="portfolio-card reveal" data-category="luxury"
-               onclick="openVideoModal('Marketing sample 1.mov','Luxury — High-Rise Penthouse | Houston Heights')">
+               onclick="openVideoModal('Marketing sample 1.mov','Luxury — High-Rise Penthouse | Corpus Christi')">
             <div class="portfolio-card-img thumb-pattern-4">
               <span class="film-frame-num">GPM&nbsp;&nbsp;003&nbsp;&nbsp;&#x25A1;</span>
               <div style="text-align:center; position:relative; z-index:2; opacity:0.3;">
@@ -458,7 +472,7 @@
             </div>
             <div class="portfolio-card-info">
               <p style="font-family:'Inter',monospace; font-size:8px; letter-spacing:0.22em; color:rgba(212,175,55,0.7); margin-bottom:4px;">LUXURY &nbsp;&#x2014;&nbsp; 2024</p>
-              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">High-Rise Penthouse — Houston Heights</h3>
+              <h3 class="text-base font-bold text-white" style="font-family:'Epilogue',sans-serif;">High-Rise Penthouse — Corpus Christi</h3>
               <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:3px;">Full tour &bull; 4K &bull; 2:12</p>
             </div>
           </div>

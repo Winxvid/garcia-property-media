@@ -595,6 +595,25 @@
     @media (max-width: 767px) {
       #film-wrapper { width: 55vw; max-width: 260px; }
       #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
+      /* Section padding reductions */
+      main section[style*="padding:128px 0"] {
+        padding-top: 64px !important;
+        padding-bottom: 64px !important;
+      }
+      /* Video editor: allow top bar to scroll horizontally */
+      .video-editor-bar {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        flex-wrap: nowrap !important;
+      }
+      /* Simplify the editor UI height on mobile */
+      .timeline-inner { height: 300px !important; }
+      /* Track control column width on mobile */
+      .track-controls-col { width: 80px !important; min-width: 80px !important; }
+      /* Accordion padding already handled above, ensure accordion title wraps */
+      .accordion-title { font-size: 0.9rem !important; }
+      /* Feature cards: don't hover-lift on mobile (touch) */
+      .feature-card:hover { transform: none; }
     }
   </style>
 </head>
@@ -670,7 +689,7 @@
         <div class="absolute inset-0"
              style="background:linear-gradient(to top, #131313, transparent, rgba(0,0,0,0.4));"></div>
 
-        <div class="relative z-10 w-full h-full mx-auto px-6 md:px-16 grid grid-cols-12 items-end pb-32"
+        <div class="relative z-10 w-full h-full mx-auto px-6 md:px-16 grid grid-cols-12 items-end pb-16 md:pb-32"
              style="max-width:1440px;">
           <div class="col-span-12 md:col-span-10">
             <h2 id="hero-line-0" class="text-sm font-bold uppercase mb-6 hero-line"
@@ -712,7 +731,7 @@
            style="background-color:#1b1b1b; border-color:rgba(255,255,255,0.1); font-family:'Inter',sans-serif; box-shadow:0 25px 50px rgba(0,0,0,0.5);">
 
         <!-- Top bar -->
-        <div class="flex items-center justify-between px-8 py-4 border-b"
+        <div class="video-editor-bar flex items-center justify-between px-8 py-4 border-b"
              style="background-color:#2a2a2a; border-color:rgba(255,255,255,0.1); color:#e2e2e2;">
           <div class="flex items-center gap-6">
             <div class="flex items-center gap-3 text-xs uppercase tracking-wider font-medium">
@@ -756,10 +775,9 @@
         </div>
 
         <!-- Timeline area -->
-        <div class="flex" style="height:400px;">
-
+          <div class="timeline-inner flex" style="height:400px;">
           <!-- Track controls -->
-          <div class="flex-shrink-0 border-r"
+          <div class="track-controls-col flex-shrink-0 border-r"
                style="width:clamp(120px,18vw,256px); background-color:#1b1b1b; border-color:rgba(255,255,255,0.1);">
             <div class="h-12 border-b flex items-center px-6"
                  style="border-color:rgba(255,255,255,0.1);">

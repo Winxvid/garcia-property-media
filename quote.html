@@ -285,6 +285,20 @@
     @media (max-width: 767px) {
       #film-wrapper { width: 55vw; max-width: 260px; }
       #film-nav a   { font-size: 1rem; letter-spacing: 0.15em; }
+      /* Reduce hero height */
+      main > section:first-child { min-height: 38vh !important; }
+      /* Section padding reduction */
+      main section[style*="padding:100px 0 140px"] {
+        padding-top: 56px !important;
+        padding-bottom: 80px !important;
+      }
+      /* Disable sticky on the info aside on mobile (it stacks) */
+      .col-span-12.md\:col-span-5 [style*="position:sticky"] {
+        position: relative !important;
+        top: auto !important;
+      }
+      /* Package grid - 1 col on small screens */
+      .pkg-label { padding: 12px 14px; }
     }
   </style>
 </head>
@@ -390,7 +404,7 @@
 
               <div class="form-group mb-6">
                 <label class="form-label" for="address">Property Address</label>
-                <input class="form-input" type="text" id="address" name="property_address" placeholder="1234 Oak Lane, Houston, TX 77001" required autocomplete="street-address" />
+                <input class="form-input" type="text" id="address" name="property_address" placeholder="1234 Oak Lane, Corpus Christi, TX 78401" required autocomplete="street-address" />
               </div>
 
               <!-- Package selection -->
