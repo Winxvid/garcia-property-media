@@ -373,9 +373,14 @@
   <main class="flex-grow pt-28 md:pt-40">
 
     <!-- ===== PAGE HERO ===== -->
-    <section class="relative overflow-hidden" style="min-height:55vh; display:flex; align-items:flex-end; background:#0a0a0a;">
-      <div class="absolute inset-0"
-           style="background: linear-gradient(160deg,rgba(10,10,10,0.70) 0%,rgba(20,15,0,0.76) 60%,rgba(10,10,10,0.70) 100%), url('Hamburger_portfolio.avif') center / cover no-repeat;"></div>
+    <section class="relative overflow-hidden" style="min-height:65vh; display:flex; align-items:flex-end; background:#0a0a0a;">
+      <!-- Hero image -->
+      <img src="Hamburger_portfolio.avif" alt="" aria-hidden="true"
+           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;pointer-events:none;" />
+      <!-- Dark overlay -->
+      <div class="absolute inset-0 pointer-events-none"
+           style="background:linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.40) 100%);"></div>
+      <!-- Scanlines -->
       <div class="absolute inset-0 pointer-events-none"
            style="background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);"></div>
 
